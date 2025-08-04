@@ -1,6 +1,5 @@
 // db.js
 // This file handles the MySQL database connection using mysql2 and exports a promise-based pool.
-// Update the connection details as needed for your environment.
 
 import dotenv from 'dotenv';
 import mysql from 'mysql2';

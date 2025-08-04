@@ -1,5 +1,5 @@
 import express from 'express';
-import inventarioRoutes from './src/routes/inventario.js'; // Adjust the path if needed
+import inventarioRoutes from './src/routes/inventario.js';
 import bodyParser from 'body-parser';
 
 const app = express();
