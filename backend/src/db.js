@@ -1,21 +1,20 @@
-// db.js
-// This file handles the MySQL database connection using mysql2 and exports a promise-based pool.
+// Este archivo configura la conexión a la base de datos MySQL utilizando mysql2 y dotenv para manejar las variables de entorno.
 
 import dotenv from 'dotenv';
 import mysql from 'mysql2';
 
-dotenv.config(); // Load environment variables from .env
+dotenv.config(); // Cargar variables de entorno desde .env
 
-// Create a connection pool for efficient query handling
+// Crear un pool de conexiones para un manejo eficiente de las consultas
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   waitForConnections: true,
-  connectionLimit: 10,    // Adjust the pool size as needed
+  connectionLimit: 10, // Número máximo de conexiones en el pool
   queueLimit: 0
 });
 
-// Export the pool using promise-based API for async/await support
+// Exportar el pool utilizando una API basada en promesas para soporte de async/await
 export default pool.promise();
