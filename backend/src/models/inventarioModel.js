@@ -22,14 +22,13 @@ export async function crearItem(datosItem) {
     id_categoria,
     precio_unitario,
     stock_actual,
-    fecha_registro,
     estado
   } = datosItem;
 
   const result = await db.query(
-    `INSERT INTO item (nombre, descripcion, id_categoria, precio_unitario, stock_actual, fecha_registro, estado)
-     VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-    [nombre, descripcion, id_categoria, precio_unitario, stock_actual, fecha_registro, estado]
+    `INSERT INTO item (nombre, descripcion, id_categoria, precio_unitario, stock_actual, estado)
+     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+    [nombre, descripcion, id_categoria, precio_unitario, stock_actual, estado]
   );
 
   // Devuelve el item creado (incluye id_producto generado)
