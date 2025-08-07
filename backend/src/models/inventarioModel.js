@@ -34,3 +34,9 @@ export async function crearItem(datosItem) {
   // Devuelve el item creado (incluye id_producto generado)
   return result.rows[0];
 }
+
+// Funcion para eliminar un item por id_producto
+export async function eliminarItemPorId(id_producto) {
+  const result = await db.query('DELETE FROM item WHERE id_producto = $1 RETURNING *', [id_producto]);
+  return result.rows[0] || null;
+}

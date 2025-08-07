@@ -1,6 +1,6 @@
 // Controlador para manejar la lógica relacionada con la tabla 'item'.
 
-import { obtenerTodosLosItems, obtenerItemPorId, crearItem } from '../models/inventarioModel.js';
+import { obtenerTodosLosItems, obtenerItemPorId, crearItem, eliminarItemPorId } from '../models/inventarioModel.js';
 
 // Funcion para obtener todos los items
 export async function getItems(req, res) {
@@ -38,5 +38,21 @@ export async function postItem(req, res) {
   } catch (error) {
     console.error('Error al crear el item:', error);
     res.status(500).json({ mensaje: 'Error al crear el item' });
+  }
+}
+
+// Funcion para eliminar un item por id_producto
+export async function deleteItem(req, res) {
+  try {
+    const { id_producto } = req.params;
+    const itemEliminado = await eliminarItemPorId(id_producto);
+    if (itemEliminado) {
+      res.json({ mensaje: 'Item eliminado correctamente', item: itemEliminado });
+    } else {
+      res.status(404).json({ mensaje: 'Item no encontrado' });
+    }
+  } catch (error) {
+    console.error('Error al eliminar el item:', error);
+    res.status(500).json({ mensaje: 'Error al eliminar el item' });
   }
 }
