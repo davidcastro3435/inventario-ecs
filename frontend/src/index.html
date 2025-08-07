@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Inventario ECS</title>
+	<!-- Vincular CSS externo -->
+	<link rel="stylesheet" href="./styles/styles.css">
+</head>
+<body>
+	<header>
+		<h1 class="main-title">Inventario ECS</h1>
+	</header>
+	<main>
+		<section class="container">
+			<div class="actions-bar">
+				<button class="btn btn-create">Nuevo Item</button>
+				<button class="btn btn-restock">Restock</button>
+				<input type="text" class="search-bar" placeholder="Buscar por nombre o ID">
+			</div>
+			<div class="table-wrapper">
+				<table class="inventory-table">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Nombre del Item</th>
+							<th>Descripción</th>
+							<th>Categoría</th>
+							<th>Stock</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Las filas de la tabla se llenarán dinámicamente -->
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</main>
+	<!-- Vincular JS externo -->
+	<script src="./js/main.js"></script>
+</body>
+</html>
