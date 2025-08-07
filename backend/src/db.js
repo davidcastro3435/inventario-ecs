@@ -5,7 +5,7 @@ import pkg from 'pg';
 const { Pool } = pkg;
 
 // Especifica el path absoluto o relativo a tu archivo .env
-dotenv.config({ path: '../.env' }); // Ajusta el path según la ubicación real
+dotenv.config(); // Ajusta el path según la ubicación real
 console.log('DB_PASSWORD:', process.env.DB_PASSWORD);
 // Crear un pool de conexiones para PostgreSQL
 const pool = new Pool({
