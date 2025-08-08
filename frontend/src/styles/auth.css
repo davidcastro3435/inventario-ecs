@@ -1,0 +1,105 @@
+/* ===================
+   Estilos Login/Auth
+=================== */
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #0077B6;
+    font-family: 'Lato', Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-bg-blur {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: inherit;
+    filter: blur(8px) brightness(0.8);
+    z-index: 0;
+}
+
+.auth-main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.auth-container {
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 2.5rem 2.2rem 2rem 2.2rem;
+    min-width: 320px;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.auth-logo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 1.2rem;
+    letter-spacing: 2px;
+}
+
+.auth-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+
+
+.auth-form input {
+    padding: 0.7rem 1rem;
+    border: none;
+    border-bottom: 2px solid #fff;
+    border-radius: 0;
+    font-size: 1rem;
+    outline: none;
+    transition: border-bottom 0.2s;
+    background: transparent;
+    color: #fff;
+}
+.auth-form input:focus {
+    border-bottom: 2.5px solid #fff;
+    background: transparent;
+}
+
+.auth-btn {
+    margin-top: 0.5rem;
+    padding: 0.7rem 1.6rem;
+    background: #f3f4f6;
+    color: #222;
+    border: none;
+    border-radius: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.auth-btn:hover {
+    background: #e5e7eb;
+}
+
+@media (max-width: 500px) {
+    .auth-container {
+        min-width: 90vw;
+        padding: 1.2rem 0.5rem 1rem 0.5rem;
+    }
+    .auth-logo {
+        font-size: 1.3rem;
+    }
+}
