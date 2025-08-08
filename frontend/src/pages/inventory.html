@@ -1,0 +1,64 @@
+<!--
+    inventory.html
+    Vista principal del inventario para Inventario ECS
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario | Inventario ECS</title>
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="../styles/inventorystyles.css">
+    <link rel="stylesheet" href="../styles/sidebar.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <span class="header-logo">Logo</span>
+            <span class="header-user">Usuario</span>
+        </div>
+    </header>
+    <div class="layout">
+        <nav class="sidebar">
+            <ul class="sidebar-menu">
+                <li>Dashboard</li>
+                <li class="active">Inventario</li>
+                <li>Configuraciones</li>
+            </ul>
+        </nav>
+        <main style="flex:1;">
+            <section class="container">
+                <div class="actions-bar">
+                    <div style="width:100%;">
+                        <span style="display:block;font-weight:bold;color:#111;font-size:2rem;margin-bottom:0.7rem;">Inventario</span>
+                    </div>
+                    <div class="actions-buttons">
+                        <button class="btn btn-create">Nuevo Item</button>
+                        <button class="btn btn-restock">Restock</button>
+                    </div>
+                    <input type="text" class="search-bar" placeholder="Buscar por nombre o ID">
+                </div>
+                <div class="table-wrapper">
+                    <table class="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre del Item</th>
+                                <th>Descripción</th>
+                                <th>Categoría</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las filas de la tabla se llenarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    <!-- Lógica principal de la vista de inventario -->
+    <script src="../js/main.js"></script>
+</body>
+</html>
