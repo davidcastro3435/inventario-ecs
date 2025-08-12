@@ -21,7 +21,7 @@ body {
    Header
 ============= */
 header {
-    background: #0077B6;
+    background: #023E8A;
     color: #fff;
     padding: 0.7rem 0.5rem;
     box-shadow: 0 2px 8px rgba(37, 99, 235, 0.05);
@@ -77,12 +77,19 @@ header {
     display: flex;
     gap: 1rem;
 }
+.inventory-title {
+    display: block;
+    font-weight: bold;
+    color: #111;
+    font-size: 2.6rem;
+    margin-bottom: 0.5rem;
+}
 
 /* ============
    Botones
 ============= */
 .btn {
-    padding: 0.7rem 1.6rem;
+    padding: 0.7rem 1.2rem;
     border: none;
     border-radius: 8px;
     font-size: 1rem;
@@ -136,7 +143,7 @@ header {
 .inventory-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 0.5rem;
+    margin-top: 0.3rem;
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
@@ -147,7 +154,7 @@ header {
     text-align: left;
 }
 .inventory-table th {
-    background: #0077B6;
+    background: #023E8A;
     color: #fff;
     font-weight: 600;
     font-size: 1.05rem;
