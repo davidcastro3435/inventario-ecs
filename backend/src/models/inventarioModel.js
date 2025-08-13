@@ -3,13 +3,22 @@ import db from '../db.js';
 
 //Funcion para obtener todos los registros de la tabla 'item'.
 export async function obtenerTodosLosItems() {
-  const result = await db.query('SELECT * FROM item');
+  const result = await db.query(`
+    SELECT item.*, categoria.nombre AS nombre_categoria
+    FROM item
+    JOIN categoria ON item.id_categoria = categoria.id_categoria
+  `);
   return result.rows;
 }
 
 //Funcion para obtener un item específico por su id_producto.
 export async function obtenerItemPorId(id_producto) {
-  const result = await db.query('SELECT * FROM item WHERE id_producto = $1', [id_producto]);
+  const result = await db.query(`
+    SELECT item.*, categoria.nombre AS nombre_categoria
+    FROM item
+    JOIN categoria ON item.id_categoria = categoria.id_categoria
+    WHERE item.id_producto = $1
+  `, [id_producto]);
   return result.rows[0] || null;
 }
 
