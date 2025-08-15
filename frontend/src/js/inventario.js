@@ -1,12 +1,12 @@
 // inventario.js
 // Obtiene los datos del inventario desde el API y los muestra en la tabla de inventory.html
 
-// Función para obtener los items del API
+import { obtenerInventarioAPI } from '../services/inventarioService.js';
+
+// Función para obtener los items del API usando el service
 async function obtenerInventario() {
 	try {
-		const response = await fetch('http://localhost:3000/inventario/items');
-		if (!response.ok) throw new Error('Error al obtener inventario');
-		const items = await response.json();
+		const items = await obtenerInventarioAPI();
 		mostrarInventario(items);
 	} catch (error) {
 		console.error(error);
