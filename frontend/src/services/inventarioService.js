@@ -6,3 +6,9 @@ export async function obtenerInventarioAPI() {
   if (!response.ok) throw new Error('Error al obtener inventario');
   return await response.json();
 }
+
+export async function obtenerCategoriasAPI() {
+  const response = await fetch('http://localhost:3000/categoria/all');
+  if (!response.ok) throw new Error('Error al obtener categorías');
+  return await response.json();
+}

@@ -3,6 +3,8 @@
 
 import { obtenerInventarioAPI } from '../services/inventarioService.js';
 
+import { obtenerCategoriasAPI } from '../services/inventarioService.js';
+
 // Función para obtener los items del API usando el service
 async function obtenerInventario() {
 	try {
@@ -41,7 +43,7 @@ function mostrarError(mensaje) {
 	tbody.innerHTML = `<tr><td colspan="6" style="color:red;text-align:center;">${mensaje}</td></tr>`;
 }
 
-// Delegación de eventos para los botones de acción
+// Delegación de eventos para los botones de acción y modal
 document.addEventListener('DOMContentLoaded', () => {
 	obtenerInventario();
 	const tbody = document.querySelector('.inventory-table tbody');
@@ -54,6 +56,53 @@ document.addEventListener('DOMContentLoaded', () => {
 			const id = e.target.getAttribute('data-id');
 			alert(`eliminar item :${id}`);
 		}
+	});
+
+	// Modal lógica
+	const btnCreate = document.querySelector('.btn-create');
+	const modalOverlay = document.getElementById('modal-create-overlay');
+	const modalForm = document.getElementById('modal-create-form');
+	const btnDiscard = modalOverlay.querySelector('.btn-discard');
+	const categoriaSelect = document.getElementById('modal-categoria');
+
+	btnCreate.addEventListener('click', async () => {
+		modalOverlay.style.display = 'flex';
+		// Cargar categorías
+		categoriaSelect.innerHTML = '<option value="">Cargando...</option>';
+		try {
+			const categorias = await obtenerCategoriasAPI();
+			categoriaSelect.innerHTML = '<option value="">Seleccione una categoría</option>';
+			categorias.forEach(cat => {
+				const opt = document.createElement('option');
+				opt.value = cat.id_categoria || cat.id || cat.nombre; // fallback
+				opt.textContent = cat.nombre;
+				categoriaSelect.appendChild(opt);
+			});
+		} catch (e) {
+			categoriaSelect.innerHTML = '<option value="">Error al cargar</option>';
+		}
+	});
+
+	btnDiscard.addEventListener('click', () => {
+		modalOverlay.style.display = 'none';
+		modalForm.reset();
+	});
+
+	// Cerrar modal al hacer click fuera del cuadro
+	modalOverlay.addEventListener('click', (e) => {
+		if (e.target === modalOverlay) {
+			modalOverlay.style.display = 'none';
+			modalForm.reset();
+		}
+	});
+
+	// Guardar (por ahora solo cierra el modal y resetea)
+	modalForm.addEventListener('submit', (e) => {
+		e.preventDefault();
+		// Aquí iría la lógica para guardar el item
+		modalOverlay.style.display = 'none';
+		modalForm.reset();
+		// Puedes mostrar un mensaje de éxito aquí
 	});
 });
 
