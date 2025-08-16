@@ -105,12 +105,12 @@ header {
 .btn-create:hover {
     background: #16a34a;
 }
-.btn-restock {
+.btn-refresh {
     background: #FFFFFF;
     color: #2563eb;
     border: 1px solid #2563eb;
 }
-.btn-restock:hover {
+.btn-refresh:hover {
     background: #0077B6;
     color: #fff;
 }
