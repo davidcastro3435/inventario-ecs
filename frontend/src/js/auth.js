@@ -1,7 +1,33 @@
 // auth.js - Lógica de autenticación para Login
 
-// Aquí irá la lógica para manejar el envío del formulario y la autenticación de usuario
-// document.querySelector('.auth-form').addEventListener('submit', function(e) {
-//     e.preventDefault();
-//     // Lógica de autenticación aquí
-// });
+document.querySelector('.auth-form').addEventListener('submit', async function(e) {
+	e.preventDefault();
+	const usuario = document.getElementById('usuario').value.trim();
+	const password = document.getElementById('password').value;
+
+	if (!usuario || !password) {
+		alert('Por favor, ingresa usuario y contraseña.');
+		return;
+	}
+
+	try {
+		const response = await fetch('http://localhost:3000/usuario/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ nombre: usuario, contrasena: password })
+		});
+
+		const data = await response.json();
+		if (response.ok && data.token) {
+			localStorage.setItem('token', data.token);
+			alert('Token de identificación:\n' + data.token); // Mensaje de depuración
+			window.location.href = 'inventory.html';
+		} else {
+			alert(data.mensaje || 'Credenciales incorrectas');
+		}
+	} catch (err) {
+		alert('Error de conexión con el servidor');
+	}
+});
