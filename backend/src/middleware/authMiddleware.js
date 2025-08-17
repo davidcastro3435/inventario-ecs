@@ -5,7 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secreto_predeterminado';
 
 export function authMiddleware(req, res, next) {
   // Permitir acceso libre a la ruta de login
-  if (req.path === '/usuario/login' && req.method === 'POST') {
+  if (req.path === '/usuario/login' && req.method === 'POST' || req.path === '/usuario/register' && req.method === 'POST') {
     return next();
   }
 
