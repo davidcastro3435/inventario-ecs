@@ -1,9 +1,7 @@
 // inventario.js
 // Obtiene los datos del inventario desde el API y los muestra en la tabla de inventory.html
 
-import { obtenerInventarioAPI } from '../services/inventarioService.js';
-
-import { obtenerCategoriasAPI } from '../services/inventarioService.js';
+import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI } from '../services/inventarioService.js';
 
 // Función para obtener los items del API usando el service
 async function obtenerInventario() {
@@ -96,13 +94,52 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	});
 
-	// Guardar (por ahora solo cierra el modal y resetea)
-	modalForm.addEventListener('submit', (e) => {
+	// Guardar: validación y POST
+	modalForm.addEventListener('submit', async (e) => {
 		e.preventDefault();
-		// Aquí iría la lógica para guardar el item
-		modalOverlay.style.display = 'none';
-		modalForm.reset();
-		// Puedes mostrar un mensaje de éxito aquí
+		// Validar campos
+		const nombre = modalForm['nombre'].value.trim();
+		const descripcion = modalForm['descripcion'].value.trim();
+		const cantidad = modalForm['cantidad'].value.trim();
+		const precio = modalForm['precio'].value.trim();
+		const alerta = modalForm['alerta'].value.trim();
+		const id_categoria = categoriaSelect.value;
+
+		let errorMsg = '';
+		if (!nombre || !descripcion || !cantidad || !precio || !alerta || !id_categoria) {
+			errorMsg = 'Todos los campos son obligatorios.';
+		} else if (!/^[0-9]+$/.test(cantidad)) {
+			errorMsg = 'Cantidad debe ser un número entero.';
+		} else if (!/^[0-9]+$/.test(alerta)) {
+			errorMsg = 'Alerta debe ser un número entero.';
+		} else if (isNaN(parseFloat(precio))) {
+			errorMsg = 'Precio unitario debe ser un número.';
+		} else if (!id_categoria) {
+			errorMsg = 'Debe seleccionar una categoría.';
+		}
+		if (errorMsg) {
+			alert(errorMsg);
+			return;
+		}
+
+		// Construir objeto para el API
+		const data = {
+			nombre,
+			descripcion,
+			stock_actual: parseInt(cantidad, 10),
+			precio_unitario: parseFloat(precio),
+			alerta: parseInt(alerta, 10),
+			id_categoria
+		};
+		try {
+			await crearItemAPI(data);
+			modalOverlay.style.display = 'none';
+			modalForm.reset();
+			obtenerInventario(); // refrescar tabla
+			alert('Item creado exitosamente.');
+		} catch (err) {
+			alert('Error al crear el item.');
+		}
 	});
 });
 
