@@ -11,7 +11,12 @@ const port = 3000;
 
 app.use(bodyParser.json()); // Middleware to parse JSON bodies
 // Habilitar CORS para todas las rutas
-app.use(cors());
+
+app.use(cors({
+  origin: 'http://localhost:8000', // Cambia al puerto de tu frontend si es diferente
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Proteger todas las rutas excepto POST /usuario/login
 app.use(authMiddleware);
