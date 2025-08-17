@@ -1,7 +1,7 @@
 // inventario.js
 // Obtiene los datos del inventario desde el API y los muestra en la tabla de inventory.html
 
-import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI } from '../services/inventarioService.js';
+import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, eliminarItemAPI } from '../services/inventarioService.js';
 
 // Función para obtener los items del API usando el service
 async function obtenerInventario() {
@@ -52,9 +52,48 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		if (e.target.classList.contains('btn-eliminar')) {
 			const id = e.target.getAttribute('data-id');
-			alert(`eliminar item :${id}`);
+			mostrarModalEliminar(id);
 		}
 	});
+
+	// Modal de confirmación para eliminar
+	function mostrarModalEliminar(id) {
+		let modal = document.getElementById('modal-eliminar');
+		if (!modal) {
+			modal = document.createElement('div');
+			modal.id = 'modal-eliminar';
+			modal.className = 'modal-overlay';
+			modal.innerHTML = `
+				<div class="modal">
+					<h2>¿Eliminar item?</h2>
+					<p>¿Estás seguro de que deseas eliminar este item?</p>
+				<div class="modal-actions">
+					<button id="btn-cancelar-eliminar" class="btn">Cancelar</button>
+					<button id="btn-confirmar-eliminar" class="btn btn-danger">Eliminar</button>
+				</div>
+			</div>
+			`;
+			document.body.appendChild(modal);
+	} else {
+		modal.style.display = 'flex';
+	}
+	// Quitar listeners previos
+	const nuevoModal = modal.cloneNode(true);
+	modal.parentNode.replaceChild(nuevoModal, modal);
+	// Listeners
+	nuevoModal.querySelector('#btn-cancelar-eliminar').onclick = () => {
+		nuevoModal.style.display = 'none';
+	};
+	nuevoModal.querySelector('#btn-confirmar-eliminar').onclick = async () => {
+		try {
+			await eliminarItemAPI(id);
+			nuevoModal.style.display = 'none';
+			obtenerInventario();
+		} catch (err) {
+			alert('Error al eliminar el item');
+		}
+	};
+}
 
 	// Modal lógica
 	const btnCreate = document.querySelector('.btn-create');

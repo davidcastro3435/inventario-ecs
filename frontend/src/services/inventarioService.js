@@ -43,3 +43,15 @@ export async function crearItemAPI(data) {
   if (!response.ok) throw new Error('Error al crear el item');
   return await response.json();
 }
+
+// Lógica para eliminar un item del inventario
+export async function eliminarItemAPI(id) {
+  const response = await fetch(`http://localhost:3000/inventario/items/${id}`, {
+    method: 'DELETE',
+    headers: {
+      ...getAuthHeaders()
+    }
+  });
+  if (!response.ok) throw new Error('Error al eliminar el item');
+  return await response.json();
+}
