@@ -1,9 +1,10 @@
 // inventario.js
 // Obtiene los datos del inventario desde el API y los muestra en la tabla de inventory.html
 
-import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, eliminarItemAPI } from '../services/inventarioService.js';
+import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, eliminarItemAPI, patchItemAPI } from '../services/inventarioService.js';
 import { mostrarModalEliminar } from './modals/modalEliminar.js';
 import { inicializarModalCrear } from './modals/modalCrear.js';
+import { mostrarModalModificar } from './modals/modalModificar.js';
 
 // Función para obtener los items del API usando el service
 async function obtenerInventario() {
@@ -47,10 +48,21 @@ function mostrarError(mensaje) {
 document.addEventListener('DOMContentLoaded', () => {
 	obtenerInventario();
 	const tbody = document.querySelector('.inventory-table tbody');
-	tbody.addEventListener('click', (e) => {
+	tbody.addEventListener('click', async (e) => {
 		if (e.target.classList.contains('btn-modificar')) {
 			const id = e.target.getAttribute('data-id');
-			alert(`modificar item :${id}`);
+			// Buscar el item en la tabla actual
+			const items = await obtenerInventarioAPI();
+			const item = items.find(i => String(i.id_producto) === String(id));
+			if (item) {
+				mostrarModalModificar({
+					item,
+					patchItemAPI,
+					refrescarTabla: obtenerInventario
+				});
+			} else {
+				alert('No se encontró el item.');
+			}
 		}
 		if (e.target.classList.contains('btn-eliminar')) {
 			const id = e.target.getAttribute('data-id');

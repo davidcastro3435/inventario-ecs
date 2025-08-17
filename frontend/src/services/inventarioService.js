@@ -55,3 +55,17 @@ export async function eliminarItemAPI(id) {
   if (!response.ok) throw new Error('Error al eliminar el item');
   return await response.json();
 }
+
+// Lógica para modificar un item del inventario (PATCH)
+export async function patchItemAPI(id, data) {
+  const response = await fetch(`http://localhost:3000/inventario/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders()
+    },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error('Error al modificar el item');
+  return await response.json();
+}
