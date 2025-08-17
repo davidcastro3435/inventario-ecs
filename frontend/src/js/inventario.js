@@ -65,21 +65,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	btnCreate.addEventListener('click', async () => {
 		modalOverlay.style.display = 'flex';
-		// Cargar categorías
-		categoriaSelect.innerHTML = '<option value="">Cargando...</option>';
+		await cargarCategoriasEnSelect(categoriaSelect);
+	});
+
+	// Función reutilizable para cargar categorías en un <select>
+	async function cargarCategoriasEnSelect(selectElement) {
+		selectElement.innerHTML = '<option value="">Cargando...</option>';
 		try {
 			const categorias = await obtenerCategoriasAPI();
-			categoriaSelect.innerHTML = '<option value="">Seleccione una categoría</option>';
+			selectElement.innerHTML = '<option value="">Seleccione una categoría</option>';
 			categorias.forEach(cat => {
 				const opt = document.createElement('option');
 				opt.value = cat.id_categoria || cat.id || cat.nombre; // fallback
 				opt.textContent = cat.nombre;
-				categoriaSelect.appendChild(opt);
+				selectElement.appendChild(opt);
 			});
 		} catch (e) {
-			categoriaSelect.innerHTML = '<option value="">Error al cargar</option>';
+			selectElement.innerHTML = '<option value="">Error al cargar</option>';
 		}
-	});
+	}
 
 	btnDiscard.addEventListener('click', () => {
 		modalOverlay.style.display = 'none';
@@ -108,12 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		let errorMsg = '';
 		if (!nombre || !descripcion || !cantidad || !precio || !alerta || !id_categoria) {
 			errorMsg = 'Todos los campos son obligatorios.';
-		} else if (!/^[0-9]+$/.test(cantidad)) {
-			errorMsg = 'Cantidad debe ser un número entero.';
-		} else if (!/^[0-9]+$/.test(alerta)) {
-			errorMsg = 'Alerta debe ser un número entero.';
-		} else if (isNaN(parseFloat(precio))) {
-			errorMsg = 'Precio unitario debe ser un número.';
+		} if (isNaN(parseInt(cantidad, 10)) || parseInt(cantidad, 10) < 0) {
+    		errorMsg = 'Cantidad debe ser un número entero no negativo.';
+		} else if (isNaN(parseInt(alerta, 10)) || parseInt(alerta, 10) < 0) {
+    		errorMsg = 'Alerta debe ser un número entero no negativo.';
+		} else if (isNaN(parseFloat(precio)) || parseFloat(precio) < 0) {
+    		errorMsg = 'Precio unitario debe ser un número no negativo.';
 		} else if (!id_categoria) {
 			errorMsg = 'Debe seleccionar una categoría.';
 		}
