@@ -1,5 +1,5 @@
 // Controlador para autenticación de usuario
-import { findUserByNombre } from '../models/usuarioModel.js';
+import { findUserByNombre, createUser } from '../models/usuarioModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -25,6 +25,27 @@ export async function loginUsuario(req, res) {
       { expiresIn: '15m' }
     );
     res.json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+}
+
+// Registrar usuario
+
+export async function registrarUsuario(req, res) {
+  const { nombre, correo, contrasena, rol } = req.body;
+  if (!nombre || !correo || !contrasena) {
+    return res.status(400).json({ mensaje: 'Nombre, correo y contraseña requeridos' });
+  }
+  try {
+    const existente = await findUserByNombre(nombre);
+    if (existente) {
+      return res.status(409).json({ mensaje: 'El usuario ya existe' });
+    }
+    const hashedPassword = await bcrypt.hash(contrasena, 10);
+    const nuevoUsuario = await createUser({ nombre, correo, contrasena: hashedPassword, rol });
+    res.status(201).json({ mensaje: 'Usuario registrado', usuario: { id: nuevoUsuario.id, nombre: nuevoUsuario.nombre, correo: nuevoUsuario.correo, rol: nuevoUsuario.rol } });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: 'Error en el servidor' });
