@@ -58,7 +58,7 @@ export async function eliminarItemAPI(id) {
 
 // Lógica para modificar un item del inventario (PATCH)
 export async function patchItemAPI(id, data) {
-  const response = await fetch(`http://localhost:3000/inventario/${id}`, {
+  const response = await fetch(`http://localhost:3000/inventario/items/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
