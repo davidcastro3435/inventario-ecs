@@ -48,3 +48,27 @@ export async function eliminarItemPorId(id_producto) {
   const result = await db.query('DELETE FROM item WHERE id_producto = $1 RETURNING *', [id_producto]);
   return result.rows[0] || null;
 }
+
+// Funcion para modificar un item existente por id_producto
+export async function modificarItemPorId(id_producto, datosActualizados) {
+  const {
+    nombre,
+    descripcion,
+    id_categoria,
+    precio_unitario,
+    stock_actual,
+  } = datosActualizados;
+
+  const result = await db.query(
+    `UPDATE item
+     SET nombre = $1,
+         descripcion = $2,
+         id_categoria = $3,
+         precio_unitario = $4,
+         stock_actual = $5
+     WHERE id_producto = $6
+     RETURNING *`,
+    [nombre, descripcion, id_categoria, precio_unitario, stock_actual, id_producto]
+  );
+  return result.rows[0] || null;
+}

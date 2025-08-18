@@ -1,6 +1,6 @@
 // Controlador para manejar la lógica relacionada con la tabla 'item'.
 
-import { obtenerTodosLosItems, obtenerItemPorId, crearItem, eliminarItemPorId } from '../models/inventarioModel.js';
+import { obtenerTodosLosItems, obtenerItemPorId, crearItem, eliminarItemPorId, modificarItemPorId } from '../models/inventarioModel.js';
 
 // Funcion para obtener todos los items
 export async function getItems(req, res) {
@@ -54,5 +54,36 @@ export async function deleteItem(req, res) {
   } catch (error) {
     console.error('Error al eliminar el item:', error);
     res.status(500).json({ mensaje: 'Error al eliminar el item' });
+  }
+}
+// Funcion para modificar un item existente por id_producto (PATCH)
+export async function patchItem(req, res) {
+  try {
+    const { id_producto } = req.params;
+    const { nombre, descripcion, id_categoria, precio_unitario, stock_actual } = req.body;
+
+    // Validación básica
+    if (!nombre || !descripcion || !id_categoria || precio_unitario === undefined || stock_actual === undefined) {
+      return res.status(400).json({ mensaje: 'Faltan campos requeridos' });
+    }
+
+    // Verifica que el item exista
+    const existente = await obtenerItemPorId(id_producto);
+    if (!existente) {
+      return res.status(404).json({ mensaje: 'Item no encontrado' });
+    }
+
+    const actualizado = await modificarItemPorId(id_producto, {
+      nombre,
+      descripcion,
+      id_categoria,
+      precio_unitario,
+      stock_actual,
+    });
+
+    res.json(actualizado);
+  } catch (error) {
+    console.error('Error al modificar el item:', error);
+    res.status(500).json({ mensaje: 'Error al modificar el item' });
   }
 }
