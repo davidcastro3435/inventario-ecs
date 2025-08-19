@@ -33,11 +33,20 @@ header {
     align-items: center;
     margin: 0 auto;
 }
+
 .header-logo {
-    font-weight: bold;
-    font-size: 1.3rem;
-    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
 }
+
+.header-logo img {
+    max-width: 200px;
+    height: 50px;
+    display: block;
+}
+
 .header-user {
     font-size: 1.1rem;
     font-weight: 500;
