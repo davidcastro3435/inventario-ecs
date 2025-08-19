@@ -106,6 +106,7 @@ header {
     transition: background 0.2s, box-shadow 0.2s;
     font-weight: 500;
 }
+
 .btn-create {
     background: #22c55e;
     color: #fff;
@@ -121,6 +122,37 @@ header {
 }
 .btn-refresh:hover {
     background: #0077B6;
+    color: #fff;
+}
+
+/* Botones de acción en la tabla */
+.action-btn {
+    background: transparent;
+    border: 1.5px solid;
+    border-radius: 5px;
+    padding: 0.3em 0.9em;
+    margin-right: 0.6em;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.action-btn:last-child {
+    margin-right: 0;
+}
+.btn-eliminar {
+    color: #d90429;
+    border-color: #d90429;
+}
+.btn-eliminar:hover {
+    background: #d90429;
+    color: #fff
+}
+.btn-modificar {
+    color: #0077b6;
+    border-color: #0077b6;
+}
+.btn-modificar:hover {
+    background: #0077b6;
     color: #fff;
 }
 

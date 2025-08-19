@@ -30,8 +30,8 @@ function mostrarInventario(items) {
 			<td>${item.nombre_categoria}</td>
 			<td>${item.stock_actual}</td>
 			<td>
-				<button class="action-btn btn-modificar" title="Modificar" data-id="${item.id_producto}">M</button>
-				<button class="action-btn btn-eliminar" title="Eliminar" data-id="${item.id_producto}">E</button>
+				<button class="action-btn btn-modificar" title="Modificar" data-id="${item.id_producto}">Modificar</button>
+				<button class="action-btn btn-eliminar" title="Eliminar" data-id="${item.id_producto}">Eliminar</button>
 			</td>
 		`;
 		tbody.appendChild(tr);
