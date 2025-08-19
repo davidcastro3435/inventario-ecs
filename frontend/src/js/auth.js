@@ -22,7 +22,6 @@ document.querySelector('.auth-form').addEventListener('submit', async function(e
 		const data = await response.json();
 		if (response.ok && data.token) {
 			localStorage.setItem('token', data.token);
-			alert('Token de identificación:\n' + data.token); // Mensaje de depuración
 			window.location.href = 'inventory.html';
 		} else {
 			alert(data.mensaje || 'Credenciales incorrectas');
