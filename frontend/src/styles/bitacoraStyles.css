@@ -86,7 +86,7 @@ header {
     display: flex;
     gap: 1rem;
 }
-.inventory-title {
+.bitacora-title {
     display: block;
     font-weight: bold;
     color: #111;
@@ -132,7 +132,7 @@ header {
     width: 100%;
     overflow-x: auto;
 }
-.inventory-table {
+.bitacora-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 0.3rem;
@@ -141,24 +141,24 @@ header {
     overflow: hidden;
     box-shadow: 0 2px 12px rgba(37, 99, 235, 0.04);
 }
-.inventory-table th, .inventory-table td {
+.bitacora-table th, .bitacora-table td {
     padding: 1rem 0.8rem;
     text-align: left;
 }
-.inventory-table th {
+.bitacora-table th {
     background: #023E8A;
     color: #fff;
     font-weight: 600;
     font-size: 1.05rem;
     border-bottom: 2px solid #e0e7ef;
 }
-.inventory-table tr {
+.bitacora-table tr {
     border-bottom: 1px solid #e5e7eb;
 }
-.inventory-table tr:nth-child(even) {
+.bitacora-table tr:nth-child(even) {
     background: #f3f6fa;
 }
-.inventory-table tr:nth-child(odd) {
+.bitacora-table tr:nth-child(odd) {
     background: #fff;
 }
 
@@ -206,7 +206,7 @@ header {
     .header-logo {
         font-size: 1.1rem;
     }
-    .inventory-table th, .inventory-table td {
+    .bitacora-table th, .bitacora-table td {
         padding: 0.7rem 0.4rem;
         font-size: 0.97rem;
     }
