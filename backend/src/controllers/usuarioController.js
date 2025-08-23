@@ -24,7 +24,7 @@ export async function loginUsuario(req, res) {
       JWT_SECRET,
       { expiresIn: '15m' }
     );
-    res.json({ token });
+    res.json({ token, id: usuario.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: 'Error en el servidor' });
