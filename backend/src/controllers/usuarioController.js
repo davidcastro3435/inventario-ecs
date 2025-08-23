@@ -20,11 +20,11 @@ export async function loginUsuario(req, res) {
       return res.status(401).json({ mensaje: 'Credenciales inválidas' });
     }
     const token = jwt.sign(
-      { id: usuario.id, nombre: usuario.nombre, rol: usuario.rol },
+      { id: usuario.id_usuario, nombre: usuario.nombre, rol: usuario.rol },
       JWT_SECRET,
       { expiresIn: '15m' }
     );
-    res.json({ token, id: usuario.id });
+    res.json({ token, id: usuario.id_usuario });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: 'Error en el servidor' });
