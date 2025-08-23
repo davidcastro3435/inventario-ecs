@@ -1,0 +1,64 @@
+<!--
+    bitacora.html
+    Vista principal de la bitácora para Inventario ECS
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitácora | Inventario ECS</title>
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="../styles/bitacoraStyles.css">
+    <link rel="stylesheet" href="../styles/sidebar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <span class="header-logo">
+                <img src="../assets/ECS_fondo_transparente.png" alt="Logo ECS" />
+            </span>
+            <span class="header-user">Usuario</span>
+        </div>
+    </header>
+    <div class="layout">
+        <nav class="sidebar">
+            <ul class="sidebar-menu">
+                <li>Dashboard</li>
+                <li>Inventario</li>
+                <li class="active">Bitácora</li>
+                <li>Configuraciones</li>
+            </ul>
+        </nav>
+        <main style="flex:1;">
+            <section class="container">
+                <div class="actions-bar">
+                    <div style="width:100%;">
+                        <span class="inventory-title">Bitácora</span>
+                    </div>
+                    <input type="text" class="search-bar" placeholder="Buscar por nombre o ID">
+                </div>
+                <div class="table-wrapper">
+                    <table class="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>ID Movimiento</th>
+                                <th>Usuario</th>
+                                <th>Producto</th>
+                                <th>Descripción</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las filas de la tabla se llenarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+   <!-- Lógica principal de la vista de bitácora -->
+    <script type="module" src="../js/bitacora.js"></script>
+</body>
+</html>
