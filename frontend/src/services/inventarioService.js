@@ -32,13 +32,14 @@ export async function obtenerCategoriasAPI() {
 
 
 export async function crearItemAPI(data) {
+  const userId = localStorage.getItem('userId');
   const response = await fetch('http://localhost:3000/inventario/items', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       ...getAuthHeaders()
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({ ...data, id_usuario: userId }),
   });
   if (!response.ok) throw new Error('Error al crear el item');
   return await response.json();
@@ -58,13 +59,14 @@ export async function eliminarItemAPI(id) {
 
 // Lógica para modificar un item del inventario (PATCH)
 export async function patchItemAPI(id, data) {
+  const userId = localStorage.getItem('userId');
   const response = await fetch(`http://localhost:3000/inventario/items/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       ...getAuthHeaders()
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({ ...data, id_usuario: userId }),
   });
   if (!response.ok) throw new Error('Error al modificar el item');
   return await response.json();
