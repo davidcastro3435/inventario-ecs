@@ -1,6 +1,7 @@
 // Controlador para manejar la lógica relacionada con la tabla 'item'.
 
 import { obtenerTodosLosItems, obtenerItemPorId, crearItem, eliminarItemPorId, modificarItemPorId } from '../models/inventarioModel.js';
+import { registrarMovimiento, eliminarMovimientosPorProducto } from '../models/movimientoModel.js';
 
 // Funcion para obtener todos los items
 export async function getItems(req, res) {
@@ -33,7 +34,20 @@ export async function getItemPorId(req, res) {
 export async function postItem(req, res) {
   try {
     const datosItem = req.body;
+    const { id_usuario } = req.body; // id_usuario debe venir en el body
     const itemCreado = await crearItem(datosItem);
+
+    // Registrar movimiento de entrada
+    if (itemCreado && id_usuario) {
+      const descripcion = `Se añadieron ${itemCreado.stock_actual} unidades de ${itemCreado.nombre}.`;
+      await registrarMovimiento({
+        id_producto: itemCreado.id_producto,
+        id_usuario,
+        descripcion,
+        cantidad: itemCreado.stock_actual,
+        tipo: 'entrada'
+      });
+    }
     res.status(201).json(itemCreado);
   } catch (error) {
     console.error('Error al crear el item:', error);
@@ -45,6 +59,7 @@ export async function postItem(req, res) {
 export async function deleteItem(req, res) {
   try {
     const { id_producto } = req.params;
+    await eliminarMovimientosPorProducto(id_producto);
     const itemEliminado = await eliminarItemPorId(id_producto);
     if (itemEliminado) {
       res.json({ mensaje: 'Item eliminado correctamente', item: itemEliminado });
@@ -60,7 +75,7 @@ export async function deleteItem(req, res) {
 export async function patchItem(req, res) {
   try {
     const { id_producto } = req.params;
-    const { nombre, descripcion, id_categoria, precio_unitario, stock_actual } = req.body;
+    const { nombre, descripcion, id_categoria, precio_unitario, stock_actual, id_usuario } = req.body;
 
     // Validación básica
     if (!nombre || !descripcion || !id_categoria || precio_unitario === undefined || stock_actual === undefined) {
@@ -73,6 +88,9 @@ export async function patchItem(req, res) {
       return res.status(404).json({ mensaje: 'Item no encontrado' });
     }
 
+    // Guardar el stock actual de la base de datos antes de modificar
+    const stock_db = existente.stock_actual;
+
     const actualizado = await modificarItemPorId(id_producto, {
       nombre,
       descripcion,
@@ -80,6 +98,29 @@ export async function patchItem(req, res) {
       precio_unitario,
       stock_actual,
     });
+
+    // Registrar movimiento si hay id_usuario
+    if (id_usuario) {
+      let descripcionMovimiento = '';
+      let cantidadMovimiento = 0;
+      if (stock_actual < stock_db) {
+        descripcionMovimiento = `Se disminuyó la cantidad de ${nombre} de ${stock_db} a ${stock_actual}`;
+        cantidadMovimiento = stock_db - stock_actual;
+      } else if (stock_actual > stock_db) {
+        descripcionMovimiento = `Se aumentó la cantidad de ${nombre} de ${stock_db} a ${stock_actual}`;
+        cantidadMovimiento = stock_actual - stock_db;
+      } else {
+        descripcionMovimiento = `Se cambiaron datos del producto ${nombre}`;
+        cantidadMovimiento = 0;
+      }
+      await registrarMovimiento({
+        id_producto,
+        id_usuario,
+        descripcion: descripcionMovimiento,
+        cantidad: cantidadMovimiento,
+        tipo: 'ajuste'
+      });
+    }
 
     res.json(actualizado);
   } catch (error) {
