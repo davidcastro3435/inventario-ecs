@@ -1,18 +1,35 @@
 // bitacora.js
-// Lógica para la página de bitácora
+// Obtiene los datos de la bitacora desde el API y los muestra en la tabla de bitacora.html
 
-// TODO: Implementar lógica para cargar y filtrar la bitácora
-// Ejemplo de estructura:
-// document.getElementById('filter-btn').addEventListener('click', function() {
-//   // Lógica para filtrar la bitácora
-// });
+import { obtenerMovimientosAPI } from '../services/bitacoraService.js';
 
-// document.getElementById('search-bar').addEventListener('input', function(e) {
-//   // Lógica para búsqueda en la bitácora
-// });
+// Función para cargar los movimientos de la bitácora
+async function cargarBitacora() {
+	try {
+		const movimientos = await obtenerMovimientosAPI();
+		renderizarTablaBitacora(movimientos);
+	} catch (err) {
+		alert('No se pudo cargar la bitácora');
+	}
+}
 
-// document.addEventListener('DOMContentLoaded', function() {
-//   // Lógica para cargar la bitácora al iniciar
-// });
+// Función para renderizar la tabla
+function renderizarTablaBitacora(movimientos) {
+	const tbody = document.querySelector('.bitacora-table tbody');
+	tbody.innerHTML = '';
+	movimientos.forEach(mov => {
+		const tr = document.createElement('tr');
+		tr.innerHTML = `
+			<td>${new Date(mov.fecha_movimiento || mov.fecha).toLocaleString()}</td>
+			<td>${mov.id_usuario || ''}</td>
+			<td>${mov.id_producto || ''}</td>
+			<td>${mov.tipo || ''}</td>
+			<td>${mov.descripcion || ''}</td>
+			<td>${mov.cantidad ?? ''}</td>
+		`;
+		tbody.appendChild(tr);
+	});
+}
 
-// Aquí irá la lógica para renderizar la tabla de la bitácora
+// Cargar la bitácora al iniciar la página
+document.addEventListener('DOMContentLoaded', cargarBitacora);
