@@ -2,6 +2,7 @@ import express from 'express';
 import inventarioRoutes from './src/routes/inventario.js';
 import categoriaRoutes from './src/routes/categoria.js';
 import usuarioRoutes from './src/routes/usuario.js';
+import bitacoraRoutes from './src/routes/bitacora.js';
 import { authMiddleware } from './src/middleware/authMiddleware.js';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -24,6 +25,7 @@ app.use(authMiddleware);
 app.use('/inventario', inventarioRoutes);
 app.use('/categoria', categoriaRoutes);
 app.use('/usuario', usuarioRoutes);
+app.use('/bitacora', bitacoraRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

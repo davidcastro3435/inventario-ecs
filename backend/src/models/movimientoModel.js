@@ -13,3 +13,8 @@ export async function registrarMovimiento({ id_producto, id_usuario, descripcion
 export async function eliminarMovimientosPorProducto(id_producto) {
   await db.query('DELETE FROM movimiento WHERE id_producto = $1', [id_producto]);
 }
+
+export async function obtenerTodosLosMovimientos() {
+  const result = await db.query('SELECT * FROM movimiento ORDER BY fecha_movimiento DESC');
+  return result.rows;
+}
