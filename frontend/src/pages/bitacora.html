@@ -25,10 +25,10 @@
     <div class="layout">
         <nav class="sidebar">
             <ul class="sidebar-menu">
-                <li>Dashboard</li>
-                <li>Inventario</li>
-                <li class="active">Bitácora</li>
-                <li>Configuraciones</li>
+                <li id="sidebar-dashboard">Dashboard</li>
+                <li id="sidebar-inventario">Inventario</li>
+                <li id="sidebar-bitacora" class="active">Bitácora</li>
+                <li id="sidebar-configuraciones">Configuraciones</li>
             </ul>
         </nav>
         <main style="flex:1;">
@@ -61,5 +61,9 @@
     </div>
    <!-- Lógica principal de la vista de bitácora -->
     <script type="module" src="../js/bitacora.js"></script>
+    <script type="module">
+        import { setupSidebarNavigation } from '../js/sidebar.js';
+        setupSidebarNavigation();
+    </script>
 </body>
 </html>

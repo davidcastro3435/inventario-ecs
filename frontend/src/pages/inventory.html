@@ -26,10 +26,10 @@
     <div class="layout">
         <nav class="sidebar">
             <ul class="sidebar-menu">
-                <li>Dashboard</li>
-                <li class="active">Inventario</li>
-                <li>Bitácora</li>
-                <li>Configuraciones</li>
+                <li id="sidebar-dashboard">Dashboard</li>
+                <li id="sidebar-inventario" class="active">Inventario</li>
+                <li id="sidebar-bitacora">Bitácora</li>
+                <li id="sidebar-configuraciones">Configuraciones</li>
             </ul>
         </nav>
         <main style="flex:1;">
@@ -97,5 +97,9 @@
     </div>
     <!-- Lógica principal de la vista de inventario -->
     <script type="module" src="../js/inventario.js"></script>
+    <script type="module">
+        import { setupSidebarNavigation } from '../js/sidebar.js';
+        setupSidebarNavigation();
+    </script>
 </body>
 </html>
