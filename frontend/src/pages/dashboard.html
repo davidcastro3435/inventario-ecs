@@ -1,5 +1,5 @@
 <!--
-    dashborad.html
+    dashboard.html
     Vista principal del dashboard para Inventario ECS
 -->
 <!DOCTYPE html>
@@ -9,9 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Inventario ECS</title>
     <!-- Estilos principales -->
-    <link rel="stylesheet" href="../styles/dashboardStyles.css">
     <link rel="stylesheet" href="../styles/sidebar.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <header>
@@ -25,23 +25,29 @@
     <div class="layout">
         <nav class="sidebar">
             <ul class="sidebar-menu">
-                <li>Dashboard</li>
-                <li>Inventario</li>
-                <li class="active">Dashboard</li>
-                <li>Configuraciones</li>
+                <li id="sidebar-dashboard" class="active">Dashboard</li>
+                <li id="sidebar-inventario">Inventario</li>
+                <li id="sidebar-bitacora">Bitácora</li>
+                <li id="sidebar-configuraciones">Configuraciones</li>
             </ul>
         </nav>
         <main style="flex:1;">
             <section class="container">
-                <div class="actions-bar">
-                    <div style="width:100%;">
-                        <span class="dashboard-title">Dashboard</span>
-                    </div>
+                <div style="width:100%;">
+                    <span class="dashboard-title">Dashboard</span>
+                    <section class="dashboard-charts">
+                        <h2>Inventario por Categoría</h2>
+                        <canvas id="inventoryCategoryChart" class="chart-canvas"></canvas>
+                    </section>
                 </div>
             </section>
         </main>
     </div>
    <!-- Lógica principal de la vista de dashboard -->
     <script type="module" src="../js/dashboard.js"></script>
+    <script type="module">
+        import { setupSidebarNavigation } from '../js/sidebar.js';
+        setupSidebarNavigation();
+    </script>
 </body>
 </html>

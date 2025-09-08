@@ -108,6 +108,19 @@ header {
 }
 
 /* ============
+   Canvas
+============= */
+
+.chart-canvas {
+    max-width: 400px;
+    max-height: 400px;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* ============
    Media Queries
 ============= */
 @media (max-width: 900px) {
