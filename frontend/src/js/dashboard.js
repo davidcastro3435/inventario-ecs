@@ -1,5 +1,9 @@
 import {obtenerInventarioAPI, obtenerCategoriasAPI} from '../services/inventarioService.js';
-
+/*
+==============================================
+    Grafico de Inventario por Categoria
+==============================================
+*/
 async function renderInventoryCategoryChart() {
     // Obtén todos los items y categorías
     const items = await obtenerInventarioAPI();
@@ -59,3 +63,58 @@ async function renderInventoryCategoryChart() {
 }
 
 renderInventoryCategoryChart();
+
+/*
+==============================================
+    Grafico de Barras: 5 Items con Menor Stock
+==============================================
+*/
+async function renderLowStockBarChart() {
+    // Obtén todos los items del inventario
+    const items = await obtenerInventarioAPI();
+
+    // Ordena los items por stock_actual ascendente y toma los 5 con menos stock
+    const lowStockItems = items
+        .filter(item => typeof item.stock_actual === 'number')
+        .sort((a, b) => a.stock_actual - b.stock_actual)
+        .slice(0, 5);
+
+    // Prepara los datos para el gráfico
+    const labels = lowStockItems.map(item => item.nombre || item.descripcion || `ID ${item.id}`);
+    const data = lowStockItems.map(item => item.stock_actual);
+
+    // Colores para las barras
+    const backgroundColors = labels.map((_, i) => `hsl(${(i * 360 / labels.length)}, 70%, 60%)`);
+
+    // Renderiza el gráfico de barras
+    const ctx = document.getElementById('lowStockBarChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Stock Actual',
+                data,
+                backgroundColor: backgroundColors,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Cantidad' }
+                },
+                x: {
+                    title: { display: true, text: 'Item' }
+                }
+            }
+        }
+    });
+}
+
+renderLowStockBarChart();
