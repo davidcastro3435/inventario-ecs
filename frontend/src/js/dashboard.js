@@ -79,10 +79,18 @@ async function renderLowStockBarChart() {
         .slice(0, 5);
 
     // Prepara los datos para el gráfico
-    const labels = lowStockItems.map(item => item.nombre || item.descripcion || `ID ${item.id}`);
+    const MAX_LABEL_LENGTH = 15;
+    const labels = lowStockItems.map(item => {
+        const nombre = item.nombre || item.descripcion || `ID ${item.id}`;
+        return nombre.length > MAX_LABEL_LENGTH
+            ? nombre.slice(0, MAX_LABEL_LENGTH) + '...'
+            : nombre;
+    });
     const stockActualData = lowStockItems.map(item => item.stock_actual);
     const stockMinimoData = lowStockItems.map(item => item.alarma);
 
+
+    
     // Renderiza el gráfico de barras agrupadas
     const ctx = document.getElementById('lowStockBarChart').getContext('2d');
     new Chart(ctx, {
@@ -144,7 +152,12 @@ async function renderTopValueBarChart() {
         .slice(0, 10);
 
     // Prepara los datos para el gráfico
-    const labels = topItems.map(item => item.nombre);
+    const MAX_LABEL_LENGTH = 15;
+    const labels = topItems.map(item =>
+        item.nombre.length > MAX_LABEL_LENGTH
+            ? item.nombre.slice(0, MAX_LABEL_LENGTH) + '...'
+            : item.nombre
+    );
     const data = topItems.map(item => item.valorTotal);
 
     // Color azul claro para todas las barras
