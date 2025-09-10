@@ -120,6 +120,28 @@ header {
     margin: 0 auto;
 }
 
+.dashboard-charts-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+}
+
+.dashboard-charts {
+    flex: 1 1 400px;
+    max-width: 500px;
+    min-width: 320px;
+    box-sizing: border-box;
+    background: #fff;
+    padding: 24px 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 /* ============
    Media Queries
 ============= */
