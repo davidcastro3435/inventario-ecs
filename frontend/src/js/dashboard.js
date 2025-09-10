@@ -4,36 +4,36 @@ import {obtenerInventarioAPI, obtenerCategoriasAPI} from '../services/inventario
     Grafico de Inventario por Categoria
 ==============================================
 */
+
 async function renderInventoryCategoryChart() {
-    // Obtén todos los items y categorías
     const items = await obtenerInventarioAPI();
     const categories = await obtenerCategoriasAPI();
 
-    // Mapea IDs de categoría a nombres
-    const categoryIdToName = {};
+    console.log('Items:', items);
+    console.log('Categories:', categories);
+    // Inicializa el contador por Id_categoria
+    const countsByCategoryId = {};
     categories.forEach(cat => {
-        categoryIdToName[cat.id] = cat.nombre;
+        countsByCategoryId[cat.id_categoria] = 0;
     });
 
-    // Inicializa el conteo por nombre de categoría
-    const categoryCounts = {};
-    categories.forEach(cat => categoryCounts[cat.nombre] = 0);
-
-    // Cuenta los items por categoría usando el ID
+    // Cuenta los items por Id_categoria
     items.forEach(item => {
-        const catId = item.categoriaId || item.categoria; // Usa el campo correcto
-        const catName = categoryIdToName[catId];
-        if (catName) {
-            categoryCounts[catName]++;
+        if (countsByCategoryId.hasOwnProperty(item.id_categoria)) {
+            countsByCategoryId[item.id_categoria]++;
         }
     });
 
-    // Prepara datos para Chart.js
-    const labels = Object.keys(categoryCounts);
-    const data = Object.values(categoryCounts);
+    // Prepara los datos para el gráfico
+    const labels = [];
+    const data = [];
+    categories.forEach(cat => {
+        labels.push(cat.nombre);
+        data.push(countsByCategoryId[cat.id_categoria]);
+    });
 
     // Genera colores distintos para cada categoría
-    const backgroundColors = labels.map((_, i) => 
+    const backgroundColors = labels.map((_, i) =>
         `hsl(${(i * 360 / labels.length)}, 70%, 60%)`
     );
 
@@ -51,11 +51,10 @@ async function renderInventoryCategoryChart() {
         options: {
             responsive: true,
             plugins: {
-                legend: {
-                    position: 'bottom'
-                },
+                legend: { position: 'bottom' },
                 title: {
-                    display: false
+                    display: true,
+                    text: 'Proporción de Inventario por Categoría'
                 }
             }
         }
@@ -82,7 +81,7 @@ async function renderLowStockBarChart() {
     // Prepara los datos para el gráfico
     const labels = lowStockItems.map(item => item.nombre || item.descripcion || `ID ${item.id}`);
     const stockActualData = lowStockItems.map(item => item.stock_actual);
-    const stockMinimoData = lowStockItems.map(item => item.alerta);
+    const stockMinimoData = lowStockItems.map(item => item.alarma);
 
     // Renderiza el gráfico de barras agrupadas
     const ctx = document.getElementById('lowStockBarChart').getContext('2d');
@@ -184,4 +183,3 @@ async function renderTopValueBarChart() {
 }
 
 renderTopValueBarChart();
-i
