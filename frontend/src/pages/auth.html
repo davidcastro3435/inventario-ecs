@@ -8,24 +8,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión | Inventario ECS</title>
-    <link rel="stylesheet" href="../styles/auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../styles/auth.css">
 </head>
 <body>
-    <div class="auth-bg-blur"></div>
     <main class="auth-main">
-        <section class="auth-container">
-            <div class="auth-logo">
-                <img src="../assets/ECS_fondo_transparente.png" alt="Logo ECS" />
+        <section class="auth-container d-flex justify-content-center align-items-center">
+            <div class="card p-4 rounded-4 shadow-lg" style="background: #F9F7F7; min-width: 340px; border: none;">
+                <div class="auth-logo mb-3 text-center">
+                    <img src="../assets/ECS_fondo_transparente.png" alt="Logo ECS" style="height: 120px;" />
+                </div>
+                <form class="auth-form" autocomplete="off">
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text bg-white border-0"><i class="bi bi-person-circle"></i></span>
+                        <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Usuario" autocomplete="username" required>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text bg-white border-0"><i class="bi bi-key"></i></span>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" autocomplete="current-password" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn auth-btn">Ingresar</button>
+                    </div>
+                </form>
             </div>
-            <form class="auth-form">
-                <input type="text" id="usuario" name="usuario" placeholder="Usuario" autocomplete="username">
-                <input type="password" id="password" name="password" placeholder="Contraseña" autocomplete="current-password">
-                <button type="submit" class="auth-btn">Ingresar</button>
-                <!-- Aquí irá la lógica de autenticación -->
-            </form>
         </section>
     </main>
+<!-- Modal de error -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background:#27374D; color:#fff;">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title w-100 text-center" id="errorModalLabel">Valores incorrectos, intente nuevamente</h5>
+                </div>
+                <div class="modal-footer border-0 d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/auth.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

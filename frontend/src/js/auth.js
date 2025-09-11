@@ -6,7 +6,7 @@ document.querySelector('.auth-form').addEventListener('submit', async function(e
 	const password = document.getElementById('password').value;
 
 	if (!usuario || !password) {
-		alert('Por favor, ingresa usuario y contraseña.');
+		mostrarErrorModal('Por favor, ingresa usuario y contraseña.');
 		return;
 	}
 
@@ -25,9 +25,19 @@ document.querySelector('.auth-form').addEventListener('submit', async function(e
 			localStorage.setItem('userId', data.id);
 			window.location.href = 'inventory.html';
 		} else {
-			alert(data.mensaje || 'Credenciales incorrectas');
+			mostrarErrorModal('Valores incorrectos, intente nuevamente');
 		}
 	} catch (err) {
-		alert('Error de conexión con el servidor');
+		mostrarErrorModal('Error de conexión con el servidor');
 	}
+
+// Función para mostrar el modal de error
+function mostrarErrorModal(mensaje) {
+	var modalLabel = document.getElementById('errorModalLabel');
+	if (modalLabel) {
+		modalLabel.textContent = mensaje;
+	}
+	var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+	errorModal.show();
+}
 });
