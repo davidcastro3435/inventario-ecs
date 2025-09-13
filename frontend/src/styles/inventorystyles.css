@@ -15,36 +15,7 @@ body {
     background: #DBE9EE;
     color: #222;
     min-height: 100vh;
-}
-
-/* ============
-   Header
-    background: #023E8A !important;
-header {
-    background: #023E8A;
-    color: #fff;
-    padding: 0.7rem 0.5rem;
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.05);
-    z-index: 2;
-}
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    width: 160px;
-    padding: 0.4rem 0.7rem;
-    margin-left: 0.5rem;
-}
-    font-size: 0.95rem;
-.header-logo img {
-    max-width: 200px;
-    height: 50px;
-    display: block;
-}
-
-.header-user {
-    font-size: 1.1rem;
-    font-weight: 500;
-}
+    }
 
 /* ============
    Layout
@@ -124,9 +95,9 @@ header {
     background: transparent;
     border: 1.5px solid;
     border-radius: 5px;
-    padding: 0.3em 0.9em;
-    margin-right: 0.6em;
-    font-size: 1em;
+    padding: 0.15em 0.5em;
+    margin-right: 0.4em;
+    font-size: 0.85em;
     cursor: pointer;
     transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
@@ -147,6 +118,23 @@ header {
 }
 .btn-modificar:hover {
     background: #0077b6;
+    color: #fff;
+}
+
+.btn-add {
+    color: #22c55e;
+    border-color: #22c55e;
+}
+.btn-add:hover {
+    background: #22c55e;
+    color: #fff;
+}
+.btn-subtract {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+.btn-subtract:hover {
+    background: #6c757d;
     color: #fff;
 }
 
