@@ -1,40 +1,45 @@
 // modalEliminar.js
 // Lógica del modal de confirmación para eliminar un item
 
-export function mostrarModalEliminar(id, eliminarItemAPI, onSuccess) {
+// modalEliminar.js
+export function initModalEliminar() {
     let modal = document.getElementById('modal-eliminar');
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'modal-eliminar';
-        modal.className = 'modal-overlay';
+        modal.className = 'modal-eliminar-overlay';
         modal.innerHTML = `
-            <div class="modal">
-                <h2>¿Eliminar item?</h2>
-                <p>¿Estás seguro de que deseas eliminar este item?</p>
-                <div class="modal-actions">
-                    <button id="btn-cancelar-eliminar" class="btn">Cancelar</button>
+            <div class="modal-eliminar-content">
+                <h2 class="modal-eliminar-title"></h2>
+                <p class="modal-eliminar-desc">Esta acción no puede deshacerse</p>
+                <div class="modal-eliminar-actions d-flex justify-content-center gap-2">
+                    <button id="btn-descartar-eliminar" class="btn btn-secondary">Descartar</button>
                     <button id="btn-confirmar-eliminar" class="btn btn-danger">Eliminar</button>
                 </div>
             </div>
         `;
         document.body.appendChild(modal);
-    } else {
-        modal.style.display = 'flex';
     }
-    // Quitar listeners previos
-    const nuevoModal = modal.cloneNode(true);
-    modal.parentNode.replaceChild(nuevoModal, modal);
-    // Listeners
-    nuevoModal.querySelector('#btn-cancelar-eliminar').onclick = () => {
-        nuevoModal.style.display = 'none';
+}
+
+export function mostrarModalEliminar({ id, nombre, onDescartar, onEliminar }) {
+    const modal = document.getElementById('modal-eliminar');
+    if (!modal) throw new Error("Modal de eliminar no inicializado. Llama a initModalEliminar() primero.");
+
+    modal.querySelector('.modal-eliminar-title').textContent = `Eliminar ${nombre}`;
+    modal.style.display = 'flex';
+
+    const btnDescartar = modal.querySelector('#btn-descartar-eliminar');
+    const btnConfirmar = modal.querySelector('#btn-confirmar-eliminar');
+
+    // Resetear eventos antes de asignar nuevos
+    btnDescartar.onclick = () => {
+        modal.style.display = 'none';
+        if (onDescartar) onDescartar();
     };
-    nuevoModal.querySelector('#btn-confirmar-eliminar').onclick = async () => {
-        try {
-            await eliminarItemAPI(id);
-            nuevoModal.style.display = 'none';
-            if (onSuccess) onSuccess();
-        } catch (err) {
-            alert('Error al eliminar el item');
-        }
+
+    btnConfirmar.onclick = () => {
+        if (onEliminar) onEliminar(id);
+        modal.style.display = 'none';
     };
 }

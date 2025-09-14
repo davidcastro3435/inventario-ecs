@@ -1,77 +1,32 @@
 /* Estilos para el modal de creación de items */
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 
-
-.modal-overlay {
+/* modalEliminar.css */
+.modal-eliminar-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0,0,0,0.4);
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 9999;
 }
-.modal {
-    font-family: 'Lato', Arial, sans-serif;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+.modal-eliminar-content {
+    background: #112D4E;
+    color: #fff;
+    border-radius: 1rem;
     padding: 2rem 2.5rem;
-    min-width: 350px;
-    max-width: 95vw;
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-    position: relative;
-}
-.modal h2 {
-    margin: 0 0 1rem 0;
-    font-size: 1.3rem;
+    min-width: 320px;
+    max-width: 90vw;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.2);
     text-align: center;
 }
-.modal-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
+.modal-eliminar-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
-.modal-form label {
-    font-weight: 500;
-    margin-bottom: 0.2rem;
-}
-.modal-form input, .modal-form select {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.modal-eliminar-desc {
     font-size: 1rem;
-}
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-.modal-actions button {
-    padding: 0.5rem 1.2rem;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-.modal-actions .btn-discard {
-    background: #eee;
-    color: #333;
-}
-.modal-actions .btn-save {
-    background: #007bff;
-    color: #fff;
-}
-.modal-actions .btn-save:hover {
-    background: #0056b3;
-}
-.modal-actions .btn-discard:hover {
-    background: #ccc;
+    margin-bottom: 2rem;
 }
