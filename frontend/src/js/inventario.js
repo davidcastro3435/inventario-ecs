@@ -2,9 +2,6 @@
 // Obtiene los datos del inventario desde el API y los muestra en la tabla de inventory.html
 
 import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, eliminarItemAPI, patchItemAPI } from '../services/inventarioService.js';
-import { mostrarModalEliminar } from './modals/modalEliminar.js';
-import { inicializarModalCrear } from './modals/modalCrear.js';
-import { mostrarModalModificar } from './modals/modalModificar.js';
 
 // Función para obtener los items del API usando el service
 async function obtenerInventario() {
@@ -46,50 +43,9 @@ function mostrarError(mensaje) {
 	tbody.innerHTML = `<tr><td colspan="6" style="color:red;text-align:center;">${mensaje}</td></tr>`;
 }
 
-
-// Delegación de eventos para los botones de acción y modal
-document.addEventListener('DOMContentLoaded', () => {
-	obtenerInventario();
-	const tbody = document.querySelector('.inventory-table tbody');
-	tbody.addEventListener('click', async (e) => {
-		if (e.target.classList.contains('btn-modificar')) {
-			const id = e.target.getAttribute('data-id');
-			// Buscar el item en la tabla actual
-			const items = await obtenerInventarioAPI();
-			const item = items.find(i => String(i.id_producto) === String(id));
-			if (item) {
-				mostrarModalModificar({
-					item,
-					patchItemAPI,
-					refrescarTabla: obtenerInventario
-				});
-			} else {
-				alert('No se encontró el item.');
-			}
-		}
-		if (e.target.classList.contains('btn-eliminar')) {
-			const id = e.target.getAttribute('data-id');
-			mostrarModalEliminar(id, eliminarItemAPI, obtenerInventario);
-		}
-	});
-/*
-	// Modal crear item
-	inicializarModalCrear({
-		btnCreate: document.querySelector('.btn-create'),
-		modalOverlay: document.getElementById('modal-create-overlay'),
-		modalForm: document.getElementById('modal-create-form'),
-		btnDiscard: document.getElementById('modal-create-overlay').querySelector('.btn-discard'),
-		categoriaSelect: document.getElementById('modal-categoria'),
-		obtenerCategoriasAPI,
-		crearItemAPI,
-		refrescarTabla: obtenerInventario
-	});
-	*/
-});
-
-
 // Mostrar offcanvas al hacer click en btn-create
 document.addEventListener('DOMContentLoaded', function() {
+	obtenerInventario();
 	const btnCreate = document.getElementById('btn-create');
 	if (btnCreate) {
 		btnCreate.addEventListener('click', function() {
@@ -164,6 +120,95 @@ document.addEventListener('DOMContentLoaded', function() {
 				form.reset();
 			} catch (err) {
 				alert('Error al crear el item: ' + (err.message || err));
+			}
+		});
+		}
+
+	// Evento para mostrar el offcanvas de edición y cargar datos
+	const tbody = document.querySelector('.inventory-table tbody');
+	if (tbody) {
+		tbody.addEventListener('click', async function(e) {
+			const btn = e.target.closest('.btn-modificar');
+			if (btn) {
+				const id = btn.getAttribute('data-id');
+				try {
+					const items = await obtenerInventarioAPI();
+					const item = items.find(i => String(i.id_producto) === String(id));
+					if (!item) {
+						alert('No se encontró el item.');
+						return;
+					}
+					// Mostrar offcanvas
+					const offcanvasEdit = new bootstrap.Offcanvas(document.getElementById('offcanvasEditItem'));
+					offcanvasEdit.show();
+					// Llenar campos
+					document.getElementById('edit-nombre').value = item.nombre || '';
+					document.getElementById('edit-descripcion').value = item.descripcion || '';
+					document.getElementById('edit-cantidad').value = item.stock_actual || '';
+					document.getElementById('edit-precio').value = item.precio_unitario || '';
+					document.getElementById('edit-cantidad-minima').value = item.cantidad_minima || '';
+					// Llenar categorías
+					const categoriaSelect = document.getElementById('edit-categoria');
+					if (categoriaSelect) {
+						const categorias = await obtenerCategoriasAPI();
+						categoriaSelect.innerHTML = '<option value="" disabled>Seleccione una categoría</option>';
+						if (Array.isArray(categorias)) {
+							categorias.forEach(cat => {
+								const option = document.createElement('option');
+								option.value = cat.id_categoria || cat._id || cat.id || cat.nombre;
+								option.textContent = cat.nombre;
+								if (String(option.value) === String(item.id_categoria)) {
+									option.selected = true;
+								}
+								categoriaSelect.appendChild(option);
+							});
+						}
+					}
+					// Guardar el id del item para edición
+					formEditItem.dataset.itemId = id;
+				} catch (err) {
+					alert('Error al cargar el item: ' + (err.message || err));
+				}
+			}
+		});
+	}
+
+	// Referencia al formulario de edición
+	const formEditItem = document.getElementById('form-edit-item');	
+	if (formEditItem) {
+		formEditItem.addEventListener('submit', async function(e) {
+			e.preventDefault();
+			const id = formEditItem.dataset.itemId;
+			const nombre = document.getElementById('edit-nombre').value.trim();
+			const descripcion = document.getElementById('edit-descripcion').value.trim();
+			const id_categoria = document.getElementById('edit-categoria').value;
+			const precio_unitario = Number(document.getElementById('edit-precio').value);
+			const stock_actual = Number(document.getElementById('edit-cantidad').value);
+			const alarma = Number(document.getElementById('edit-cantidad-minima').value);
+
+			if (!nombre || !descripcion || !id_categoria) {
+				alert('Por favor, complete todos los campos obligatorios.');
+				return;
+			}
+
+			const data = {
+				nombre,
+				descripcion,
+				id_categoria,
+				precio_unitario,
+				stock_actual,
+				alarma
+			};
+
+			try {
+				await patchItemAPI(id, data);
+				alert('Item modificado correctamente');
+				if (typeof obtenerInventario === 'function') obtenerInventario();
+				const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('offcanvasEditItem'));
+				if (offcanvas) offcanvas.hide();
+				formEditItem.reset();
+			} catch (err) {
+				alert('Error al modificar el item: ' + (err.message || err));
 			}
 		});
 	}
