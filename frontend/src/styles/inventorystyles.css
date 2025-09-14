@@ -1,7 +1,4 @@
-/*
-    inventorystyles.css
-    Estilos principales para la vista de inventario
-*/
+
 
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 
@@ -192,6 +189,18 @@ body {
 .inventory-table tr:nth-child(odd) {
     background: #fff;
 }
+
+/* Offcanvas estilos personalizados */
+.offcanvas.offcanvas-end {
+    background: #f9f7f7;
+}
+.offcanvas .form-label {
+    font-weight: bold;
+}
+/*
+    inventorystyles.css
+    Estilos principales para la vista de inventario
+*/
 
 /* ============
    Media Queries
