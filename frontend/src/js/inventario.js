@@ -3,6 +3,8 @@
 
 import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, eliminarItemAPI, patchItemAPI } from '../services/inventarioService.js';
 import { initModalEliminar, mostrarModalEliminar } from "./modals/modalEliminar.js";
+import {iniciarModalAgregar, mostrarModalAgregar } from './modals/modalAgregar.js';
+
 // Función para obtener los items del API usando el service
 async function obtenerInventario() {
 	try {
@@ -49,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	 // Inicializar el modal de eliminar (se crea en el DOM si no existe)
     initModalEliminar();
+	iniciarModalAgregar();
 
     const tbody = document.querySelector('.inventory-table tbody');
     if (tbody) {
@@ -80,4 +83,36 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+	// Evento para mostrar el modal agregar stock
+	const tbodyAgregar = document.querySelector('.inventory-table tbody');
+	if (tbodyAgregar) {
+		tbodyAgregar.addEventListener('click', async function(e) {
+			const btnAdd = e.target.closest('.btn-add');
+			if (btnAdd) {
+				const id = btnAdd.getAttribute('data-id');
+				try {
+					const items = await obtenerInventarioAPI();
+					const item = items.find(i => String(i.id_producto) === String(id));
+					if (!item) {
+						alert('No se encontró el item.');
+						return;
+					}
+					mostrarModalAgregar({
+						id,
+						nombre: item.nombre,
+						onDescartar: () => {},
+						onAceptar: async (itemId, cantidad) => {
+							// Aquí puedes llamar a la función de inventarioService para agregar stock
+							// Ejemplo:
+							// await agregarStockAPI(itemId, cantidad);
+							// obtenerInventario();
+						}
+					});
+				} catch (err) {
+					alert('Error al cargar el item: ' + (err.message || err));
+				}
+			}
+		});
+	}
 });

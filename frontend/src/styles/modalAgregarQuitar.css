@@ -1,0 +1,33 @@
+/* Estilos para el modal agregar stock */
+.modal-agregar-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.3);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.modal-agregar-content {
+  background: #DDE6ED;
+  color: #27374D;
+  border-radius: 1rem;
+  padding: 2rem 2.5rem;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+  text-align: center;
+}
+.modal-agregar-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.modal-agregar-desc {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+.modal-agregar-input {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}

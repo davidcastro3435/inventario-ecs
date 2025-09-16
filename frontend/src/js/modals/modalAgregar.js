@@ -1,34 +1,45 @@
-// modalCrear.js
-import { mostrarModalItemForm } from './modalItemForm.js';
-
-export function inicializarModalCrear({
-    btnCreate,
-    obtenerCategoriasAPI,
-    crearItemAPI,
-    refrescarTabla
-}) {
-    btnCreate.addEventListener('click', () => {
-        mostrarModalItemForm({
-            titulo: 'Crear Item',
-            valoresIniciales: {},
-            onSubmit: crearItemAPI,
-            refrescarTabla,
-            obtenerCategoriasAPI
-        });
-    });
+// modalAgregar.js
+// Modal centrado para agregar stock a un item
+export function iniciarModalAgregar() {
+	let modal = document.getElementById('modal-agregar');
+	if (!modal) {
+		modal = document.createElement('div');
+		modal.id = 'modal-agregar';
+		modal.className = 'modal-agregar-overlay';
+		modal.innerHTML = `
+			<div class="modal-agregar-content">
+				<h2 class="modal-agregar-title">Agregar stock</h2>
+				<p class="modal-agregar-desc">Selecciona la cantidad que deseas agregar</p>
+				<input type="number" class="form-control modal-agregar-input" id="modal-agregar-cantidad" min="1" placeholder="Cantidad" required style="margin-bottom:1.5rem;">
+				<div class="modal-agregar-actions d-flex justify-content-end gap-2">
+					<button id="btn-descartar-agregar" class="btn btn-secondary">Descartar</button>
+					<button id="btn-aceptar-agregar" class="btn btn-primary">Aceptar</button>
+				</div>
+			</div>
+		`;
+		document.body.appendChild(modal);
+	}
 }
 
-function cargarCategoriasEnSelect(selectElement, obtenerCategoriasAPI) {
-    selectElement.innerHTML = '<option value="">Cargando...</option>';
-    return obtenerCategoriasAPI().then(categorias => {
-        selectElement.innerHTML = '<option value="">Seleccione una categoría</option>';
-        categorias.forEach(cat => {
-            const opt = document.createElement('option');
-            opt.value = cat.id_categoria || cat.id || cat.nombre; // fallback
-            opt.textContent = cat.nombre;
-            selectElement.appendChild(opt);
-        });
-    }).catch(() => {
-        selectElement.innerHTML = '<option value="">Error al cargar</option>';
-    });
+export function mostrarModalAgregar({ id, nombre, onDescartar, onAceptar }) {
+	iniciarModalAgregar();
+	const modal = document.getElementById('modal-agregar');
+	modal.style.display = 'flex';
+	// Quitar listeners previos
+	const nuevoModal = modal.cloneNode(true);
+	modal.parentNode.replaceChild(nuevoModal, modal);
+	// Listeners
+	nuevoModal.querySelector('#btn-descartar-agregar').onclick = () => {
+		nuevoModal.style.display = 'none';
+		if (onDescartar) onDescartar();
+	};
+	nuevoModal.querySelector('#btn-aceptar-agregar').onclick = () => {
+		const cantidad = Number(nuevoModal.querySelector('#modal-agregar-cantidad').value);
+		if (!cantidad || cantidad < 1) {
+			alert('Ingrese una cantidad válida');
+			return;
+		}
+		if (onAceptar) onAceptar(id, cantidad);
+		nuevoModal.style.display = 'none';
+	};
 }
