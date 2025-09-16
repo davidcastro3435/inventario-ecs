@@ -1,7 +1,7 @@
 // offcanvas.js
 
 
-import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, eliminarItemAPI, patchItemAPI } from '../../services/inventarioService.js';
+import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, patchItemAPI } from '../../services/inventarioService.js';
 document.addEventListener('DOMContentLoaded', () => {
     // --- Offcanvas Crear Item ---
     const btnCreate = document.getElementById('btn-create');
@@ -154,4 +154,39 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    // Offcanvas Crear Categoría
+
+    // Abrir offcanvas al presionar el botón btn-nueva-categoria
+    const btnNuevaCategoria = document.getElementById('btn-nueva-categoria');
+    const offcanvasCategoria = document.getElementById('offcanvasCategoria');
+    if (btnNuevaCategoria && offcanvasCategoria) {
+        btnNuevaCategoria.addEventListener('click', function() {
+            const offcanvas = new bootstrap.Offcanvas(offcanvasCategoria);
+            offcanvas.show();
+        });
+    }
+
+    // Lógica para enviar datos al API al crear categoría
+    const formCategoria = document.getElementById('formCategoria');
+    if (formCategoria) {
+        formCategoria.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('categoriaNombre').value.trim();
+            const descripcion = document.getElementById('categoriaDescripcion').value.trim();
+            if (!nombre || !descripcion) {
+                alert('Completa todos los campos.');
+                return;
+            }
+            try {
+                await crearCategoriaAPI({ nombre, descripcion });
+                alert('Categoría creada correctamente');
+                formCategoria.reset();
+                const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasCategoria);
+                if (offcanvas) offcanvas.hide();
+            } catch (err) {
+                alert('Error al crear la categoría');
+            }
+        });
+    }
+
 });

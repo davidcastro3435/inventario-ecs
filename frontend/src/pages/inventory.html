@@ -61,93 +61,116 @@
                         </tbody>
                     </table>
                 </div>
-                    <!-- Offcanvas para crear nuevo item -->
-                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCreateItem" data-bs-backdrop="static" aria-labelledby="offcanvasCreateItemLabel">
-                        <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="offcanvasCreateItemLabel">Crear nuevo item</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <form id="form-create-item">
-                                <div class="mb-3">
-                                    <label for="item-nombre" class="form-label">Nombre</label>
-                                    <input type="text" class="form-control" id="item-nombre" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="item-descripcion" class="form-label">Descripción</label>
-                                    <textarea class="form-control" id="item-descripcion" rows="2" required></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="item-cantidad" class="form-label">Cantidad</label>
-                                    <input type="number" class="form-control" id="item-cantidad" min="0" step="1" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="item-precio" class="form-label">Precio unitario</label>
-                                    <input type="number" class="form-control" id="item-precio" min="0" step="0.01" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="item-cantidad-minima" class="form-label">Cantidad mínima</label>
-                                    <input type="number" class="form-control" id="item-cantidad-minima" min="0" step="1" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="item-categoria" class="form-label">Categoría</label>
-                                    <select class="form-select" id="item-categoria" required>
-                                        <option value="" disabled selected>Seleccione una categoría</option>
-                                        <!-- Opciones se llenarán dinámicamente -->
-                                    </select>
-                                </div>
-                                <div class="d-flex justify-content-end gap-2">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Descartar</button>
-                                    <button type="submit" class="btn btn-primary">Crear</button>
-                                </div>
-                            </form>
-                        </div>
+                <!-- Offcanvas para crear nuevo item -->
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCreateItem" data-bs-backdrop="static" aria-labelledby="offcanvasCreateItemLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasCreateItemLabel">Crear nuevo item</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
-                    <!-- Offcanvas para modificar item -->
-                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEditItem" data-bs-backdrop="static" aria-labelledby="offcanvasEditItemLabel">
-                        <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="offcanvasEditItemLabel">Modificar item</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <form id="form-edit-item">
-                                <div class="mb-3">
-                                    <label for="edit-nombre" class="form-label">Nombre</label>
-                                    <input type="text" class="form-control" id="edit-nombre" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="edit-descripcion" class="form-label">Descripción</label>
-                                    <textarea class="form-control" id="edit-descripcion" rows="2" required></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="edit-cantidad" class="form-label">Cantidad</label>
-                                    <input type="number" class="form-control" id="edit-cantidad" min="0" step="1" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="edit-precio" class="form-label">Precio unitario</label>
-                                    <input type="number" class="form-control" id="edit-precio" min="0" step="0.01" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="edit-cantidad-minima" class="form-label">Cantidad mínima</label>
-                                    <input type="number" class="form-control" id="edit-cantidad-minima" min="0" step="1" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="edit-categoria" class="form-label">Categoría</label>
-                                    <select class="form-select" id="edit-categoria" required>
-                                        <option value="" disabled selected>Seleccione una categoría</option>
-                                        <!-- Opciones se llenarán dinámicamente -->
-                                    </select>
-                                </div>
-                                <div class="d-flex justify-content-end gap-2">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Descartar</button>
-                                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-                                </div>
-                            </form>
-                        </div>
+                    <div class="offcanvas-body">
+                        <form id="form-create-item">
+                            <div class="mb-3">
+                                <label for="item-nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="item-nombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="item-descripcion" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="item-descripcion" rows="2" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="item-cantidad" class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" id="item-cantidad" min="0" step="1" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="item-precio" class="form-label">Precio unitario</label>
+                                <input type="number" class="form-control" id="item-precio" min="0" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="item-cantidad-minima" class="form-label">Cantidad mínima</label>
+                                <input type="number" class="form-control" id="item-cantidad-minima" min="0" step="1" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="item-categoria" class="form-label">Categoría</label>
+                                <select class="form-select" id="item-categoria" required>
+                                    <option value="" disabled selected>Seleccione una categoría</option>
+                                    <!-- Opciones se llenarán dinámicamente -->
+                                </select>
+                            </div>
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Descartar</button>
+                                <button type="submit" class="btn btn-primary">Crear</button>
+                            </div>
+                        </form>
                     </div>
-                    <div>
-                    <!-- Modal para eliminar item -->
+                </div>
+                <!-- Offcanvas para modificar item -->
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEditItem" data-bs-backdrop="static" aria-labelledby="offcanvasEditItemLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasEditItemLabel">Modificar item</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
+                    <div class="offcanvas-body">
+                        <form id="form-edit-item">
+                            <div class="mb-3">
+                                <label for="edit-nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="edit-nombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-descripcion" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="edit-descripcion" rows="2" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-cantidad" class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" id="edit-cantidad" min="0" step="1" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-precio" class="form-label">Precio unitario</label>
+                                <input type="number" class="form-control" id="edit-precio" min="0" step="0.01" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-cantidad-minima" class="form-label">Cantidad mínima</label>
+                                <input type="number" class="form-control" id="edit-cantidad-minima" min="0" step="1" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-categoria" class="form-label">Categoría</label>
+                                <select class="form-select" id="edit-categoria" required>
+                                    <option value="" disabled selected>Seleccione una categoría</option>
+                                    <!-- Opciones se llenarán dinámicamente -->
+                                </select>
+                            </div>
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Descartar</button>
+                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div>
+                <!-- Offcanvas para crear nueva categoría -->
+                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCategoria" aria-labelledby="offcanvasCategoriaLabel" data-bs-backdrop="static" style="background-color: #f9f7f7;">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title fw-bold" id="offcanvasCategoriaLabel">Crear nueva categoría</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <form id="formCategoria">
+                        <div class="mb-3">
+                            <label for="categoriaNombre" class="form-label fw-bold">Nombre</label>
+                            <input type="text" class="form-control" id="categoriaNombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoriaDescripcion" class="form-label fw-bold">Descripción</label>
+                            <textarea class="form-control" id="categoriaDescripcion" rows="2" required></textarea>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Descartar</button>
+                            <button type="submit" class="btn btn-primary">Crear</button>
+                        </div>
+                        </form>
+                        <div id="categoriaMensaje" class="mt-3"></div>
+                    </div>
+                    </div>
+                </div>
             </section>
         </main>
     </div>
