@@ -15,42 +15,7 @@ body {
     background: #DBE9EE;
     color: #222;
     min-height: 100vh;
-}
-
-/* ============
-   Header
-============= */
-header {
-    background: #023E8A;
-    color: #fff;
-    padding: 0.7rem 0.5rem;
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.05);
-    z-index: 2;
-}
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;
-}
-
-.header-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 0.5rem;
-}
-
-.header-logo img {
-    max-width: 200px;
-    height: 50px;
-    display: block;
-}
-
-.header-user {
-    font-size: 1.1rem;
-    font-weight: 500;
-}
+    }
 
 /* ============
    Layout
@@ -65,7 +30,7 @@ header {
 ============= */
 .container {
     margin: 0;
-    background: #fff;
+    background: #F9F7F7;
     border-radius: 0;
     box-shadow: 0 4px 24px rgba(37, 99, 235, 0.08);
     padding: 2.5rem 2rem 2rem 2rem;
@@ -125,6 +90,7 @@ header {
     box-shadow: 0 4px 16px rgba(37, 99, 235, 0.10);
 }
 
+
 /* ============
    Tabla de inventario
 ============= */
@@ -146,7 +112,7 @@ header {
     text-align: left;
 }
 .bitacora-table th {
-    background: #023E8A;
+    background: #3F72AF;
     color: #fff;
     font-weight: 600;
     font-size: 1.05rem;
