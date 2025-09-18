@@ -9,31 +9,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Inventario ECS</title>
     <!-- Estilos principales -->
-    <link rel="stylesheet" href="../styles/dashboardStyles.css">
-    <link rel="stylesheet" href="../styles/sidebar.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="../styles/dashboardStyles.css">
+    <link rel="stylesheet" href="../styles/sidebar.css">
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <span class="header-logo">
-                <img src="../assets/ECS_fondo_transparente.png" alt="Logo ECS" />
-            </span>
-            <span class="header-user">Usuario</span>
-        </div>
-    </header>
-    <div class="layout">
-        <nav class="sidebar">
-            <ul class="sidebar-menu">
-                <li id="sidebar-dashboard" class="active">Dashboard</li>
-                <li id="sidebar-inventario">Inventario</li>
-                <li id="sidebar-bitacora">Bitácora</li>
-                <li id="sidebar-configuraciones">Configuraciones</li>
+    <div class="layout" style="background:#F9F7F7; min-height:100vh;">
+        <nav class="sidebar d-flex flex-column align-items-center py-4" style="background:#112D4E;">
+            <div class="mb-4">
+                <img src="../assets/ECS_fondo_transparente.png" alt="Logo ECS" style="height:60px;" />
+                <hr style="border:0; border-top:2px solid #e0e7ef; margin:1rem 0 0.5rem 0; width:100%; opacity:0.7;" />
+            </div>
+            <ul class="sidebar-menu w-100">
+                <li id="sidebar-dashboard" class="active d-flex align-items-center"><i class="bi bi-graph-up me-2"></i>Dashboard</li>
+                <li id="sidebar-inventario" class="d-flex align-items-center"><i class="bi bi-box-seam me-2"></i>Inventario</li>
+                <li id="sidebar-bitacora" class="d-flex align-items-center"><i class="bi bi-clipboard me-2"></i>Bitácora</li>
+                <li id="sidebar-configuraciones" class="d-flex align-items-center"><i class="bi bi-gear me-2"></i>Configuraciones</li>
             </ul>
         </nav>
         <main style="flex:1;">
-            <section class="container">
+            <section class="container" style="background:#F9F7F7; border-radius:1rem; width:100%; max-width:100%;">
                 <div style="width:100%;">
                     <span class="dashboard-title">Dashboard</span>
                     <section class="dashboard-charts-grid">
