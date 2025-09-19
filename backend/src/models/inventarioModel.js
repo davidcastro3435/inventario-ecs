@@ -31,12 +31,13 @@ export async function crearItem(datosItem) {
     id_categoria,
     precio_unitario,
     stock_actual,
+    alarma,
   } = datosItem;
 
   const result = await db.query(
-    `INSERT INTO item (nombre, descripcion, id_categoria, precio_unitario, stock_actual)
-     VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-    [nombre, descripcion, id_categoria, precio_unitario, stock_actual]
+    `INSERT INTO item (nombre, descripcion, id_categoria, precio_unitario, stock_actual, alarma)
+     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+    [nombre, descripcion, id_categoria, precio_unitario, stock_actual, alarma]
   );
 
   // Devuelve el item creado (incluye id_producto generado)
@@ -57,6 +58,7 @@ export async function modificarItemPorId(id_producto, datosActualizados) {
     id_categoria,
     precio_unitario,
     stock_actual,
+    alarma,
   } = datosActualizados;
 
   const result = await db.query(
@@ -65,10 +67,11 @@ export async function modificarItemPorId(id_producto, datosActualizados) {
          descripcion = $2,
          id_categoria = $3,
          precio_unitario = $4,
-         stock_actual = $5
-     WHERE id_producto = $6
+         stock_actual = $5,
+         alarma = $6
+     WHERE id_producto = $7
      RETURNING *`,
-    [nombre, descripcion, id_categoria, precio_unitario, stock_actual, id_producto]
+    [nombre, descripcion, id_categoria, precio_unitario, stock_actual, alarma, id_producto]
   );
   return result.rows[0] || null;
 }
