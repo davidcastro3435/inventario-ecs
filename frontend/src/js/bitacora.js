@@ -21,8 +21,8 @@ function renderizarTablaBitacora(movimientos) {
 		const tr = document.createElement('tr');
 		tr.innerHTML = `
 			<td>${new Date(mov.fecha_movimiento || mov.fecha).toLocaleString()}</td>
-			<td>${mov.id_usuario || ''}</td>
-			<td>${mov.id_producto || ''}</td>
+			<td>${mov.nombre_usuario || ''}</td>
+			<td>${mov.nombre_producto || ''}</td>
 			<td>${mov.tipo || ''}</td>
 			<td>${mov.descripcion || ''}</td>
 			<td>${mov.cantidad ?? ''}</td>

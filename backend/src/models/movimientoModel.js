@@ -15,6 +15,6 @@ export async function eliminarMovimientosPorProducto(id_producto) {
 }
 
 export async function obtenerTodosLosMovimientos() {
-  const result = await db.query('SELECT * FROM movimiento ORDER BY fecha_movimiento DESC');
+  const result = await db.query('SELECT m.*, p.nombre AS nombre_producto, u.nombre AS nombre_usuario FROM movimiento m JOIN item p ON m.id_producto = p.id_producto JOIN usuario u ON m.id_usuario = u.id_usuario ORDER BY m.fecha_movimiento DESC');
   return result.rows;
 }
