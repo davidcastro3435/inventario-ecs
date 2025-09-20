@@ -1,6 +1,6 @@
 // Controlador para manejar la lógica relacionada con la tabla 'item'.
 
-import { obtenerTodosLosItems, obtenerItemPorId, crearItem, eliminarItemPorId, modificarItemPorId } from '../models/inventarioModel.js';
+import { obtenerTodosLosItems, obtenerItemPorId, crearItem, eliminarItemPorId, modificarItemPorId, actualizarStockPorId  } from '../models/inventarioModel.js';
 import { registrarMovimiento, eliminarMovimientosPorProducto } from '../models/movimientoModel.js';
 
 // Funcion para obtener todos los items
@@ -32,7 +32,12 @@ export async function getItemPorId(req, res) {
 
 // Funcion para crear un nuevo item en la base de datos
 export async function postItem(req, res) {
+  const usuario = req.usuario; // Obtener usuario del token decodificado
   try {
+    if (!usuario || usuario.rol !== 'admin') {
+      return res.status(403).json({ mensaje: 'Acceso denegado: solo administradores pueden realizar esta acción.' });
+    }
+
     const datosItem = req.body;
     const { id_usuario } = req.body; // id_usuario debe venir en el body
     const itemCreado = await crearItem(datosItem);
@@ -57,7 +62,11 @@ export async function postItem(req, res) {
 
 // Funcion para eliminar un item por id_producto
 export async function deleteItem(req, res) {
+  const usuario = req.usuario; // Obtener usuario del token decodificado
   try {
+    if (!usuario || usuario.rol !== 'admin') {
+      return res.status(403).json({ mensaje: 'Acceso denegado: solo administradores pueden realizar esta acción.' });
+    }
     const { id_producto } = req.params;
     await eliminarMovimientosPorProducto(id_producto);
     const itemEliminado = await eliminarItemPorId(id_producto);
@@ -71,9 +80,14 @@ export async function deleteItem(req, res) {
     res.status(500).json({ mensaje: 'Error al eliminar el item' });
   }
 }
+
 // Funcion para modificar un item existente por id_producto (PATCH)
 export async function patchItem(req, res) {
+  const usuario = req.usuario; // Obtener usuario del token decodificado
   try {
+    if (!usuario || usuario.rol !== 'admin') {
+      return res.status(403).json({ mensaje: 'Acceso denegado: solo administradores pueden realizar esta acción.' });
+    }
     const { id_producto } = req.params;
     const { nombre, descripcion, id_categoria, precio_unitario, stock_actual, id_usuario } = req.body;
 
@@ -126,5 +140,26 @@ export async function patchItem(req, res) {
   } catch (error) {
     console.error('Error al modificar el item:', error);
     res.status(500).json({ mensaje: 'Error al modificar el item' });
+  }
+}
+
+// PATCH solo para actualizar el stock_actual de un item
+export async function patchStockItem(req, res) {
+  try {
+    const { id_producto } = req.params;
+    const { stock_actual } = req.body;
+    if (stock_actual === undefined) {
+      return res.status(400).json({ mensaje: 'El campo stock_actual es requerido' });
+    }
+    // Verifica que el item exista
+    const existente = await obtenerItemPorId(id_producto);
+    if (!existente) {
+      return res.status(404).json({ mensaje: 'Item no encontrado' });
+    }
+    const actualizado = await actualizarStockPorId(id_producto, stock_actual);
+    res.json(actualizado);
+  } catch (error) {
+    console.error('Error al actualizar el stock:', error);
+    res.status(500).json({ mensaje: 'Error al actualizar el stock' });
   }
 }

@@ -50,6 +50,15 @@ export async function eliminarItemPorId(id_producto) {
   return result.rows[0] || null;
 }
 
+// Funcion para actualizar solo el stock_actual de un item por id_producto
+export async function actualizarStockPorId(id_producto, stock_actual) {
+  const result = await db.query(
+    `UPDATE item SET stock_actual = $1 WHERE id_producto = $2 RETURNING *`,
+    [stock_actual, id_producto]
+  );
+  return result.rows[0] || null;
+}
+
 // Funcion para modificar un item existente por id_producto
 export async function modificarItemPorId(id_producto, datosActualizados) {
   const {

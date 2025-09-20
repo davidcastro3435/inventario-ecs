@@ -1,7 +1,7 @@
 // Rutas para manejar las operaciones relacionadas con 'item' en el inventario
 
 import express from 'express';
-import { getItems, getItemPorId, postItem, deleteItem, patchItem } from '../controllers/inventarioController.js';
+import { getItems, getItemPorId, postItem, deleteItem, patchItem, patchStockItem } from '../controllers/inventarioController.js';
 
 const router = express.Router();
 
@@ -19,5 +19,8 @@ router.delete('/items/:id_producto', deleteItem);
 
 // Ruta para modificar un item existente por id_producto (PATCH)
 router.patch('/items/:id_producto', patchItem);
+
+// Ruta para actualizar solo el stock_actual de un item
+router.patch('/items/stock/:id_producto', patchStockItem);
 
 export default router;
