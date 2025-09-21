@@ -10,7 +10,7 @@ function getAuthHeaders() {
 }
 
 export async function obtenerMovimientosAPI() {
-	const response = await fetch('http://localhost:3000/bitacora/all', {
+	const response = await fetch('http://localhost:3000/bitacora/movimientos', {
 		headers: {
 			...getAuthHeaders()
 		}

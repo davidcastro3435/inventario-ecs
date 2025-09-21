@@ -3,7 +3,7 @@ import { getMovimientos } from '../controllers/bitacoraController.js';
 
 const router = express.Router();
 
-// Ruta para obtener todos los movimientos
-router.get('/all', getMovimientos);
+// Ruta para obtener los movimientos (admin: todos, otros: solo propios)
+router.get('/movimientos', getMovimientos);
 
 export default router;
