@@ -1,4 +1,74 @@
 import {obtenerInventarioAPI, obtenerCategoriasAPI} from '../services/inventarioService.js';
+
+const inventario = await obtenerInventarioAPI();
+const categorias = await obtenerCategoriasAPI();
+
+/*
+==============================================
+    Cuadro de valor total inventario
+==============================================
+*/
+
+async function mostrarValorTotalInventario() {
+    try {
+        // Llamada al API para obtener todo el inventario
+        let total = 0;
+        for (const item of inventario) {
+            total += (item.stock_actual || 0) * (item.precio_unitario || 0);
+        }
+        // Mostrar el resultado en el cuadro
+        const valorBox = document.getElementById('valor-total-inventario');
+        if (valorBox) {
+            valorBox.textContent = total.toLocaleString('es-ES', { style: 'currency', currency: 'CRC' });
+        }
+    } catch (error) {
+        console.error('Error al calcular el valor total del inventario:', error);
+    }
+}
+
+// Ejecutar al cargar el dashboard
+mostrarValorTotalInventario();
+
+/*
+==============================================
+    Cuadro de valor promedio inventario
+==============================================
+*/
+
+async function mostrarValorPromedioInventario() {
+    try {
+        let suma = 0;
+        let totalItems = inventario.length;
+        for (const item of inventario) {
+            suma += (parseFloat(item.precio_unitario) || 0);
+        }
+        let promedio = totalItems > 0 ? suma / totalItems : 0;
+        const promedioRedondeado = promedio.toFixed(2);
+        // Mostrar el resultado en el cuadro
+        const valorBox = document.getElementById('valor-promedio-inventario');
+        if (valorBox) {
+            valorBox.textContent = promedioRedondeado.toLocaleString('es-ES', { style: 'currency', currency: 'CRC' });
+        }
+    } catch (error) {
+        console.error('Error al calcular el valor promedio del inventario:', error);
+    }
+}
+
+// Ejecutar al cargar el dashboard
+mostrarValorPromedioInventario();
+
+/*
+==============================================
+    Grafico de Barras: Valor total inventario por categoría
+==============================================
+*/
+
+/*
+==============================================
+    Grafico de valor total inventario mensual
+==============================================
+*/
+
 /*
 ==============================================
     Grafico de Inventario por Categoria
@@ -6,19 +76,14 @@ import {obtenerInventarioAPI, obtenerCategoriasAPI} from '../services/inventario
 */
 
 async function renderInventoryCategoryChart() {
-    const items = await obtenerInventarioAPI();
-    const categories = await obtenerCategoriasAPI();
-
-    console.log('Items:', items);
-    console.log('Categories:', categories);
     // Inicializa el contador por Id_categoria
     const countsByCategoryId = {};
-    categories.forEach(cat => {
+    categorias.forEach(cat => {
         countsByCategoryId[cat.id_categoria] = 0;
     });
 
     // Cuenta los items por Id_categoria
-    items.forEach(item => {
+    inventario.forEach(item => {
         if (countsByCategoryId.hasOwnProperty(item.id_categoria)) {
             countsByCategoryId[item.id_categoria]++;
         }
@@ -27,7 +92,7 @@ async function renderInventoryCategoryChart() {
     // Prepara los datos para el gráfico
     const labels = [];
     const data = [];
-    categories.forEach(cat => {
+    categorias.forEach(cat => {
         labels.push(cat.nombre);
         data.push(countsByCategoryId[cat.id_categoria]);
     });
@@ -69,11 +134,9 @@ renderInventoryCategoryChart();
 ==============================================
 */
 async function renderLowStockBarChart() {
-    // Obtén todos los items del inventario
-    const items = await obtenerInventarioAPI();
 
     // Ordena los items por stock_actual ascendente y toma los 5 con menos stock
-    const lowStockItems = items
+    const lowStockItems = inventario
         .filter(item => typeof item.stock_actual === 'number')
         .sort((a, b) => a.stock_actual - b.stock_actual)
         .slice(0, 5);
@@ -137,11 +200,8 @@ renderLowStockBarChart();
 ==============================================
 */
 async function renderTopValueBarChart() {
-    // Obtén todos los items del inventario
-    const items = await obtenerInventarioAPI();
-
     // Calcula el valor total de cada producto
-    const itemsWithValue = items.map(item => ({
+    const itemsWithValue = inventario.map(item => ({
         nombre: item.nombre || item.descripcion || `ID ${item.id}`,
         valorTotal: (item.precio_unitario || 0) * (item.stock_actual || 0)
     }));
