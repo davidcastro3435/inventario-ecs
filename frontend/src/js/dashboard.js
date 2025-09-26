@@ -31,34 +31,6 @@ mostrarValorTotalInventario();
 
 /*
 ==============================================
-    Cuadro de valor promedio inventario
-==============================================
-*/
-
-async function mostrarValorPromedioInventario() {
-    try {
-        let suma = 0;
-        let totalItems = inventario.length;
-        for (const item of inventario) {
-            suma += (parseFloat(item.precio_unitario) || 0);
-        }
-        let promedio = totalItems > 0 ? suma / totalItems : 0;
-        const promedioRedondeado = promedio.toFixed(2);
-        // Mostrar el resultado en el cuadro
-        const valorBox = document.getElementById('valor-promedio-inventario');
-        if (valorBox) {
-            valorBox.textContent = promedioRedondeado.toLocaleString('es-ES', { style: 'currency', currency: 'CRC' });
-        }
-    } catch (error) {
-        console.error('Error al calcular el valor promedio del inventario:', error);
-    }
-}
-
-// Ejecutar al cargar el dashboard
-mostrarValorPromedioInventario();
-
-/*
-==============================================
     Grafico de Barras: Valor total inventario por categoría
 ==============================================
 */
