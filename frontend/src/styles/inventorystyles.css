@@ -7,7 +7,7 @@ body {
     padding: 0;
     font-family: 'Roboto Flex', Arial, sans-serif;
     background: #DBE9EE;
-    color: #222;
+    color: #24273a;
     min-height: 100vh;
     }
 
@@ -48,7 +48,7 @@ body {
 .inventory-title {
     display: block;
     font-weight: bold;
-    color: #111;
+    color: #24273a;
     font-size: 2.6rem;
     margin-bottom: 0.5rem;
 }
