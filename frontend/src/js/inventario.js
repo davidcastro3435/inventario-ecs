@@ -12,7 +12,6 @@ async function obtenerInventario() {
 		const items = await obtenerInventarioAPI();
 		mostrarInventario(items);
 	} catch (error) {
-		console.error(error);
 		mostrarError('No se pudo cargar el inventario');
 	}
 }
