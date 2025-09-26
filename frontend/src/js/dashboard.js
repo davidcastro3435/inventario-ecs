@@ -47,7 +47,7 @@ async function renderStockMensualLineChart() {
         console.log('Datos de stock mensual:', stockMensual);
         // Procesar datos: obtener mes y stock
         // Suponiendo que stockMensual tiene campos: fecha (YYYY-MM-DD) y stock
-        const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         const labels = stockMensual.map(reg => {
             const date = new Date(reg.fecha);
             return meses[date.getMonth()];
@@ -164,7 +164,7 @@ async function renderLowStockBarChart() {
     const lowStockItems = inventario
         .filter(item => typeof item.stock_actual === 'number')
         .sort((a, b) => a.stock_actual - b.stock_actual)
-        .slice(0, 5);
+        .slice(0, 10);
 
     // Prepara los datos para el gráfico
     const MAX_LABEL_LENGTH = 15;
