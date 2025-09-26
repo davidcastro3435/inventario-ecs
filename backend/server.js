@@ -14,7 +14,7 @@ app.use(bodyParser.json()); // Middleware to parse JSON bodies
 // Habilitar CORS para todas las rutas
 
 app.use(cors({
-  origin: 'http://localhost:8000', // Cambia al puerto de tu frontend si es diferente
+  origin: 'http://localhost:8000', 
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

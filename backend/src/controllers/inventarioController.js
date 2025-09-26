@@ -1,6 +1,6 @@
 // Controlador para manejar la lógica relacionada con la tabla 'item'.
 
-import { obtenerTodosLosItems, obtenerItemPorId, crearItem, eliminarItemPorId, modificarItemPorId, actualizarStockPorId  } from '../models/inventarioModel.js';
+import { obtenerTodosLosItems, obtenerItemPorId, crearItem, eliminarItemPorId, modificarItemPorId, actualizarStockPorId, obtenerStockMensual } from '../models/inventarioModel.js';
 import { registrarMovimiento, eliminarMovimientosPorProducto } from '../models/movimientoModel.js';
 
 // Funcion para obtener todos los items
@@ -161,5 +161,16 @@ export async function patchStockItem(req, res) {
   } catch (error) {
     console.error('Error al actualizar el stock:', error);
     res.status(500).json({ mensaje: 'Error al actualizar el stock' });
+  }
+}
+
+// Obtener todos los registros de la tabla stock_mensual
+export async function getStockMensual(req, res) {
+  try {
+    const stockMensual = await obtenerStockMensual();
+    res.json(stockMensual);
+  } catch (error) {
+    console.error('Error al obtener stock mensual:', error);
+    res.status(500).json({ mensaje: 'Error al obtener stock mensual' });
   }
 }

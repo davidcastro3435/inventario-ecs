@@ -84,3 +84,9 @@ export async function modificarItemPorId(id_producto, datosActualizados) {
   );
   return result.rows[0] || null;
 }
+
+// Obtener todos los registros de la tabla stock_mensual
+export async function obtenerStockMensual() {
+  const result = await db.query('SELECT * FROM stock_mensual');
+  return result.rows;
+}
