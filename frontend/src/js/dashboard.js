@@ -1,4 +1,4 @@
-import {obtenerInventarioAPI, obtenerCategoriasAPI} from '../services/inventarioService.js';
+import {obtenerInventarioAPI, obtenerCategoriasAPI, obtenerStockMensualAPI} from '../services/inventarioService.js';
 
 const inventario = await obtenerInventarioAPI();
 const categorias = await obtenerCategoriasAPI();
@@ -68,6 +68,59 @@ mostrarValorPromedioInventario();
     Grafico de valor total inventario mensual
 ==============================================
 */
+
+async function renderStockMensualLineChart() {
+    try {
+        const stockMensual = await obtenerStockMensualAPI();
+        console.log('Datos de stock mensual:', stockMensual);
+        // Procesar datos: obtener mes y stock
+        // Suponiendo que stockMensual tiene campos: fecha (YYYY-MM-DD) y stock
+        const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        const labels = stockMensual.map(reg => {
+            const date = new Date(reg.fecha);
+            return meses[date.getMonth()];
+        });
+        const data = stockMensual.map(reg => reg.stock_total);
+        const ctx = document.getElementById('stockMensualLineChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'Stock Mensual',
+                    data,
+                    borderColor: '#1B3C53',
+                    backgroundColor: 'rgba(27,60,83,0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Stock Mensual'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Stock' }
+                    },
+                    x: {
+                        title: { display: true, text: 'Mes' }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al renderizar el gráfico de stock mensual:', error);
+    }
+}
+
+renderStockMensualLineChart();
 
 /*
 ==============================================

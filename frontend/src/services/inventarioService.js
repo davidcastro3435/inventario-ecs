@@ -71,3 +71,14 @@ export async function patchItemAPI(id, data) {
   if (!response.ok) throw new Error('Error al modificar el item');
   return await response.json();
 }
+
+// Obtener el stock mensual
+export async function obtenerStockMensualAPI() {
+  const response = await fetch('http://localhost:3000/inventario/items/stock/mes', {
+    headers: {
+      ...getAuthHeaders()
+    }
+  });
+  if (!response.ok) throw new Error('Error al obtener stock mensual');
+  return await response.json();
+}
