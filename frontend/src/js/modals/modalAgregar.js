@@ -11,7 +11,7 @@ export function iniciarModalAgregar() {
 				<h2 class="modal-agregar-title">Agregar stock</h2>
 				<p class="modal-agregar-desc">Selecciona la cantidad que deseas agregar</p>
 				<input type="number" class="form-control modal-agregar-input" id="modal-agregar-cantidad" min="1" placeholder="Cantidad" required style="margin-bottom:1.5rem;">
-				<div class="modal-agregar-actions d-flex justify-content-end gap-2">
+				<div class="modal-agregar-actions d-flex justify-content-center gap-2">
 					<button id="btn-descartar-agregar" class="btn btn-secondary">Descartar</button>
 					<button id="btn-aceptar-agregar" class="btn btn-primary">Aceptar</button>
 				</div>
