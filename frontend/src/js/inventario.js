@@ -1,7 +1,7 @@
 // inventario.js
 // Obtiene los datos del inventario desde el API y los muestra en la tabla de inventory.html
 
-import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, eliminarItemAPI, patchItemAPI } from '../services/inventarioService.js';
+import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, eliminarItemAPI, patchItemAPI, patchItemStockAPI } from '../services/inventarioService.js';
 import { initModalEliminar, mostrarModalEliminar } from "./modals/modalEliminar.js";
 import {iniciarModalAgregar, mostrarModalAgregar } from './modals/modalAgregar.js';
 import { iniciarModalQuitar, mostrarModalQuitar } from './modals/modalQuitar.js';
@@ -100,14 +100,16 @@ document.addEventListener('DOMContentLoaded', function() {
 						return;
 					}
 					mostrarModalAgregar({
-						id,
-						nombre: item.nombre,
+                        id,
 						onDescartar: () => {},
-						onAceptar: async (itemId, cantidad) => {
-							// Aquí puedes llamar a la función de inventarioService para agregar stock
-							// Ejemplo:
-							// await agregarStockAPI(itemId, cantidad);
-							// obtenerInventario();
+						onAceptar: async (cantidad) => {
+                            try {
+                                await patchItemStockAPI(id, { stock_actual: Number(item.stock_actual) + Number(cantidad) });
+                                obtenerInventario();
+                                alert(`Stock agregado correctamente`);
+                            } catch (err) {
+                                alert('Error al agregar stock: ' + (err.message || err));
+                            }
 						}
 					});
 				} catch (err) {
@@ -132,13 +134,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     mostrarModalQuitar({
                         id,
-                        nombre: item.nombre,
                         onDescartar: () => {},
-                        onAceptar: async (itemId, cantidad) => {
+                        onAceptar: async (cantidad) => {
                             // Lógica para remover stock usando patchItemAPI
-                            const jwt = localStorage.getItem('jwt');
                             try {
-                                await patchItemAPI(itemId, { stock_actual: item.stock_actual - cantidad }, jwt);
+                                await patchItemStockAPI(id, { stock_actual: Number(item.stock_actual) - Number(cantidad) });
                                 obtenerInventario();
                                 alert(`Stock removido correctamente`);
                             } catch (err) {

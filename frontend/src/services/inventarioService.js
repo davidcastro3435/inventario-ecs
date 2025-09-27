@@ -82,3 +82,18 @@ export async function obtenerStockMensualAPI() {
   if (!response.ok) throw new Error('Error al obtener stock mensual');
   return await response.json();
 }
+
+
+export async function patchItemStockAPI(id, data) {
+  const userId = localStorage.getItem('userId');
+  const response = await fetch(`http://localhost:3000/inventario/items/stock/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders()
+    },
+    body: JSON.stringify({ ...data, id_usuario: userId }),
+  });
+  if (!response.ok) throw new Error('Error al modificar el stock del item');
+  return await response.json();
+}

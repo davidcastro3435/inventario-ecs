@@ -49,7 +49,7 @@ export function mostrarModalQuitar({ id, nombre, onDescartar, onAceptar }) {
             return;
         }
         inputCantidad.classList.remove('is-invalid');
-        if (onAceptar) onAceptar(id, cantidad);
+        if (onAceptar) onAceptar(cantidad);
         nuevoModal.style.display = 'none';
     };
 }

@@ -39,7 +39,7 @@ export function mostrarModalAgregar({ id, nombre, onDescartar, onAceptar }) {
 			alert('Ingrese una cantidad válida');
 			return;
 		}
-		if (onAceptar) onAceptar(id, cantidad);
+		if (onAceptar) onAceptar(cantidad);
 		nuevoModal.style.display = 'none';
 	};
 }
