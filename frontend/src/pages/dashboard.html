@@ -39,7 +39,7 @@
                 <div style="width:100%;">
                     <span class="dashboard-title">Dashboard</span>
                     <!-- Valor total inventario -->
-                    <div id="valor-total-inventario-box" style="width:280px; margin:20px 0 32px 0; border:2px solid #1B3C53; border-radius:10px; padding:16px; background:#EEEEEE; display:flex; flex-direction:column; align-items:center;">
+                    <div id="valor-total-inventario-box" style="width:100%; max-width: 1000px; margin:20px 0 32px 0; border:2px solid #1B3C53; border-radius:10px; padding:16px; background:#EEEEEE; display:flex; flex-direction:column; align-items:center;">
                         <span id="valor-total-inventario" style="font-size:2rem; font-weight:bold; color:#1B3C53;">0</span>
                         <span style="font-size:1rem; color:#1B3C53; margin-top:4px;">Valor total inventario</span>
                     </div>
@@ -58,13 +58,13 @@
 
                     <!-- Inventario por categoría y productos con mayor valor total en una fila -->
                     <div style="display:flex; gap:32px; margin-bottom:32px; ">
-                        <section class="dashboard-charts" style="flex:1; background-color: #EEEEEE; border:2px solid #1B3C53;">
+                        <section class="dashboard-charts" style="flex:1; background-color: #F9F7F7; border:2px solid #1B3C53;">
                             <h2>Inventario por Categoría</h2>
                             <canvas id="inventoryCategoryChart" class="chart-canvas"></canvas>
                         </section>
-                        <section class="dashboard-charts" style="flex:1; background-color: #EEEEEE; border:2px solid #1B3C53;">
+                        <section class="dashboard-charts" style="flex:1; background-color: #F9F7F7; border:2px solid #1B3C53;">
                             <h2>Productos con Mayor Valor Total</h2>
-                            <canvas id="topValueBarChart" class="chart-canvas"></canvas>
+                            <canvas id="topValueBarChart" class="chart-canvas" style="width:100%; max-width: 1000px; height:400px;"></canvas>
                         </section>
                     </div>
                 </div>
