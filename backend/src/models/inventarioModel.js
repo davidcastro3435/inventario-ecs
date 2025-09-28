@@ -7,6 +7,7 @@ export async function obtenerTodosLosItems() {
     SELECT item.*, categoria.nombre AS nombre_categoria
     FROM item
     JOIN categoria ON item.id_categoria = categoria.id_categoria
+    ORDER BY item.id_producto ASC
   `);
   return result.rows;
 }
