@@ -33,11 +33,51 @@
         <main style="flex:1; width:100%; height: 100%;">
             <section class="container" style="background:#F9F7F7; border-radius:1rem; width:100%; max-width:100%;">
                 <div class="actions-bar row align-items-center mb-3">
-                    <div class="col-md-6 col-12">
+                    <div class="col-12">
                         <span class="configuracion-title">Configuraciones</span>
                     </div>
+                    <div class="col-12 mt-3">
+                        <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNuevoUsuario" aria-controls="offcanvasNuevoUsuario">
+                            <i class="bi bi-person-plus"></i> Crear nuevo usuario
+                        </button>
+                    </div>
                 </div>
-            </section>
+
+                <!-- Offcanvas para crear nuevo usuario -->
+                <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasNuevoUsuario" aria-labelledby="offcanvasNuevoUsuarioLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNuevoUsuarioLabel">Crear Nuevo Usuario</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <form id="formNuevoUsuario">
+                            <div class="mb-3">
+                                <label for="nuevoUsuarioNombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nuevoUsuarioNombre" name="nombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nuevoUsuarioCorreo" class="form-label">Correo</label>
+                                <input type="email" class="form-control" id="nuevoUsuarioCorreo" name="correo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nuevoUsuarioPassword" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="nuevoUsuarioPassword" name="password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nuevoUsuarioRol" class="form-label">Rol</label>
+                                <select class="form-select" id="nuevoUsuarioRol" name="rol" required>
+                                    <option value="admin">Administrador</option>
+                                    <option value="tecnico">Técnico</option>
+                                </select>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Crear usuario</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Descartar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </section>
         </main>
     </div>
    <!-- Lógica principal de la vista de bitácora -->
