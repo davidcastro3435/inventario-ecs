@@ -1,7 +1,8 @@
 // Controlador para manejar la lógica relacionada con la tabla 'item'.
 
 import { obtenerTodosLosItems, obtenerItemPorId, crearItem, eliminarItemPorId, modificarItemPorId, actualizarStockPorId, obtenerStockMensual } from '../models/inventarioModel.js';
-import { registrarMovimiento, eliminarMovimientosPorProducto } from '../models/movimientoModel.js';
+import { eliminarMovimientosPorProducto } from '../models/movimientoModel.js';
+import { registrarMovimientoBitacora } from './bitacoraController.js';
 import { enviarAlertaBajoStock } from '../utils/emailService.js';
 import { obtenerCorreosAdmins } from '../models/usuarioModel.js';
 
@@ -34,12 +35,11 @@ export async function getItemPorId(req, res) {
 
 // Funcion para crear un nuevo item en la base de datos
 export async function postItem(req, res) {
-  const usuario = req.usuario; // Obtener usuario del token decodificado
   try {
-    if (!usuario || usuario.rol !== 'admin') {
+    const usuario = req.usuario; // Obtener usuario del token decodificado
+    if (!verificarAdmin(usuario)) {
       return res.status(403).json({ mensaje: 'Acceso denegado: solo administradores pueden realizar esta acción.' });
     }
-
     const datosItem = req.body;
     const { id_usuario } = req.body; // id_usuario debe venir en el body
     const itemCreado = await crearItem(datosItem);
@@ -64,14 +64,16 @@ export async function postItem(req, res) {
 
 // Funcion para eliminar un item por id_producto
 export async function deleteItem(req, res) {
-  const usuario = req.usuario; // Obtener usuario del token decodificado
   try {
-    if (!usuario || usuario.rol !== 'admin') {
+    const usuario = req.usuario; // Obtener usuario del token decodificado
+    if (!verificarAdmin(usuario)) {
       return res.status(403).json({ mensaje: 'Acceso denegado: solo administradores pueden realizar esta acción.' });
     }
+
     const { id_producto } = req.params;
     await eliminarMovimientosPorProducto(id_producto);
     const itemEliminado = await eliminarItemPorId(id_producto);
+
     if (itemEliminado) {
       res.json({ mensaje: 'Item eliminado correctamente', item: itemEliminado });
     } else {
@@ -85,11 +87,12 @@ export async function deleteItem(req, res) {
 
 // Funcion para modificar un item existente por id_producto (PATCH)
 export async function patchItem(req, res) {
-  const usuario = req.usuario; // Obtener usuario del token decodificado
   try {
-    if (!usuario || usuario.rol !== 'admin') {
+    const usuario = req.usuario; // Obtener usuario del token decodificado
+    if (!verificarAdmin(usuario)) {
       return res.status(403).json({ mensaje: 'Acceso denegado: solo administradores pueden realizar esta acción.' });
     }
+
     const { id_producto } = req.params;
     const { nombre, descripcion, id_categoria, precio_unitario, stock_actual, id_usuario, alarma } = req.body;
 
@@ -118,29 +121,18 @@ export async function patchItem(req, res) {
 
     // Registrar movimiento si hay id_usuario
     if (id_usuario) {
-      let descripcionMovimiento = '';
-      let cantidadMovimiento = 0;
-      if (stock_actual < stock_db) {
-        descripcionMovimiento = `Se disminuyó la cantidad de ${nombre} de ${stock_db} a ${stock_actual}`;
-        cantidadMovimiento = stock_db - stock_actual;
-      } else if (stock_actual > stock_db) {
-        descripcionMovimiento = `Se aumentó la cantidad de ${nombre} de ${stock_db} a ${stock_actual}`;
-        cantidadMovimiento = stock_actual - stock_db;
-      } else {
-        descripcionMovimiento = `Se cambiaron datos del producto ${nombre}`;
-        cantidadMovimiento = 0;
-      }
-      await registrarMovimiento({
+      await registrarMovimientoBitacora({
         id_producto,
         id_usuario,
-        descripcion: descripcionMovimiento,
-        cantidad: cantidadMovimiento,
-        tipo: 'ajuste'
+        nombre,
+        stock_db,
+        stock_actual
       });
     }
     
     // Obtener correos de administradores
     const correosAdmins = await obtenerCorreosAdmins();
+
     if (existente.stock_actual > actualizado.stock_minimo && actualizado.stock_actual <= actualizado.stock_minimo) {
       // Enviar alerta de bajo stock a cada admin
       for (const correo of correosAdmins) {
@@ -158,11 +150,14 @@ export async function patchItem(req, res) {
 // PATCH solo para actualizar el stock_actual de un item
 export async function patchStockItem(req, res) {
   try {
+    const usuario = req.usuario; // Obtener usuario del token decodificado
     const { id_producto } = req.params;
     const { stock_actual } = req.body;
+
     if (stock_actual === undefined) {
       return res.status(400).json({ mensaje: 'El campo stock_actual es requerido' });
     }
+
     // Verifica que el item exista
     const existente = await obtenerItemPorId(id_producto);
     if (!existente) {
@@ -172,13 +167,21 @@ export async function patchStockItem(req, res) {
 
     // Obtener correos de administradores
     const correosAdmins = await obtenerCorreosAdmins();
-    // Obtener información actualizada del item
     const itemActualizado = await obtenerItemPorId(id_producto);
     if (existente.stock_actual > itemActualizado.stock_minimo && itemActualizado.stock_actual <= itemActualizado.stock_minimo) {
-      // Enviar alerta de bajo stock a cada admin
       for (const correo of correosAdmins) {
         await enviarAlertaBajoStock(correo, itemActualizado.nombre, itemActualizado.stock_actual, itemActualizado.stock_minimo);
       }
+    }
+
+    // Registrar movimiento si hay usuario en el token
+    if (usuario) {
+      await registrarMovimientoBitacora({
+        id_producto,
+        id_usuario: usuario.id,
+        stock_db: existente.stock_actual,
+        stock_actual: itemActualizado.stock_actual
+      });
     }
 
     res.json(actualizado);
@@ -197,4 +200,8 @@ export async function getStockMensual(req, res) {
     console.error('Error al obtener stock mensual:', error);
     res.status(500).json({ mensaje: 'Error al obtener stock mensual' });
   }
+}
+
+function verificarAdmin(usuario) {
+  return usuario && usuario.rol === 'admin';
 }
