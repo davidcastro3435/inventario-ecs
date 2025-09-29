@@ -1,7 +1,7 @@
 // inventario.js
 // Obtiene los datos del inventario desde el API y los muestra en la tabla de inventory.html
 
-import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, eliminarItemAPI, patchItemAPI, patchItemStockAPI } from '../services/inventarioService.js';
+import { obtenerInventarioAPI, obtenerItemPorIdAPI, crearItemAPI, eliminarItemAPI, patchItemAPI, patchItemStockAPI } from '../services/inventarioService.js';
 import { initModalEliminar, mostrarModalEliminar } from "./modals/modalEliminar.js";
 import {iniciarModalAgregar, mostrarModalAgregar } from './modals/modalAgregar.js';
 import { iniciarModalQuitar, mostrarModalQuitar } from './modals/modalQuitar.js';
@@ -14,6 +14,16 @@ async function obtenerInventario() {
 	} catch (error) {
 		mostrarError('No se pudo cargar el inventario');
 	}
+}
+
+// Función para decodificar el token y obtener el rol del usuario
+function decodificarToken() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.rol;
+    }
+    return null;
 }
 
 // Función para mostrar los items en la tabla
@@ -62,8 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const id = btnEliminar.getAttribute('data-id');
             try {
-                const items = await obtenerInventarioAPI();
-                const item = items.find(i => String(i.id_producto) === String(id));
+                const item = await obtenerItemPorIdAPI(id);
                 if (!item) {
                     alert('No se encontró el item.');
                     return;
@@ -93,8 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			if (btnAdd) {
 				const id = btnAdd.getAttribute('data-id');
 				try {
-					const items = await obtenerInventarioAPI();
-					const item = items.find(i => String(i.id_producto) === String(id));
+					const item = await obtenerItemPorIdAPI(id);
 					if (!item) {
 						alert('No se encontró el item.');
 						return;
@@ -118,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 	}
+
 	// Evento para mostrar el modal quitar stock
     const tbodyQuitar = document.querySelector('.inventory-table tbody');
     if (tbodyQuitar) {
@@ -126,8 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (btnSubtract) {
                 const id = btnSubtract.getAttribute('data-id');
                 try {
-                    const items = await obtenerInventarioAPI();
-                    const item = items.find(i => String(i.id_producto) === String(id));
+                    const item = await obtenerItemPorIdAPI(id);
                     if (!item) {
                         alert('No se encontró el item.');
                         return;

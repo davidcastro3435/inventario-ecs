@@ -19,6 +19,16 @@ export async function obtenerInventarioAPI() {
   return await response.json();
 }
 
+// Obtener un item por id
+export async function obtenerItemPorIdAPI(id_producto) {
+  const response = await fetch(`http://localhost:3000/inventario/items/${id_producto}`, {
+    headers: {
+      ...getAuthHeaders()
+    }
+  });
+  if (!response.ok) throw new Error('Error al obtener el item');
+  return await response.json();
+}
 
 export async function obtenerCategoriasAPI() {
   const response = await fetch('http://localhost:3000/categoria/all', {
@@ -72,17 +82,6 @@ export async function patchItemAPI(id, data) {
   return await response.json();
 }
 
-// Obtener el stock mensual
-export async function obtenerStockMensualAPI() {
-  const response = await fetch('http://localhost:3000/inventario/items/stock/mes', {
-    headers: {
-      ...getAuthHeaders()
-    }
-  });
-  if (!response.ok) throw new Error('Error al obtener stock mensual');
-  return await response.json();
-}
-
 
 export async function patchItemStockAPI(id, data) {
   const userId = localStorage.getItem('userId');
@@ -95,5 +94,16 @@ export async function patchItemStockAPI(id, data) {
     body: JSON.stringify({ ...data, id_usuario: userId }),
   });
   if (!response.ok) throw new Error('Error al modificar el stock del item');
+  return await response.json();
+}
+
+// Obtener el stock mensual
+export async function obtenerStockMensualAPI() {
+  const response = await fetch('http://localhost:3000/inventario/items/stock/mes', {
+    headers: {
+      ...getAuthHeaders()
+    }
+  });
+  if (!response.ok) throw new Error('Error al obtener stock mensual');
   return await response.json();
 }

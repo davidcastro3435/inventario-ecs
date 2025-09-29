@@ -1,7 +1,7 @@
 // offcanvas.js
 
 
-import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, patchItemAPI } from '../../services/inventarioService.js';
+import { obtenerInventarioAPI, obtenerCategoriasAPI, crearItemAPI, patchItemAPI, obtenerItemPorIdAPI } from '../../services/inventarioService.js';
 document.addEventListener('DOMContentLoaded', () => {
     // --- Offcanvas Crear Item ---
     const btnCreate = document.getElementById('btn-create');
@@ -85,8 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const id = btn.getAttribute('data-id');
 
             try {
-                const items = await obtenerInventarioAPI();
-                const item = items.find(i => String(i.id_producto) === String(id));
+                const item = await obtenerItemPorIdAPI(id);
 
                 if (!item) {
                     alert('No se encontró el item.');
