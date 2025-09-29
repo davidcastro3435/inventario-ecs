@@ -28,25 +28,26 @@ function decodificarToken() {
 
 // Función para mostrar los items en la tabla
 function mostrarInventario(items) {
-	const tbody = document.querySelector('.inventory-table tbody');
-	tbody.innerHTML = '';
-	items.forEach(item => {
-		const tr = document.createElement('tr');
-		tr.innerHTML = `
-			<td>${item.id_producto}</td>
-			<td>${item.nombre}</td>
-			<td>${item.descripcion}</td>
-			<td>${item.nombre_categoria}</td>
-			<td>${item.stock_actual}</td>
-			<td class="d-flex gap-1">
-				<button class="btn btn-success btn-sm action-btn btn-add" title="Agregar" data-id="${item.id_producto}"><i class="bi bi-plus-lg"></i></button>
-				<button class="btn btn-secondary btn-sm action-btn btn-subtract" title="Quitar" data-id="${item.id_producto}"><i class="bi bi-dash-lg"></i></button>
-				<button class="btn btn-primary btn-sm action-btn btn-modificar" title="Modificar" data-id="${item.id_producto}"><i class="bi bi-pencil-square"></i></button>
-				<button class="btn btn-danger btn-sm action-btn btn-eliminar" title="Eliminar" data-id="${item.id_producto}"><i class="bi bi-trash-fill"></i></button>
-			</td>
-		`;
-		tbody.appendChild(tr);
-	});
+    const tbody = document.querySelector('.inventory-table tbody');
+    tbody.innerHTML = '';
+    const rol = decodificarToken();
+    items.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item.id_producto}</td>
+            <td>${item.nombre}</td>
+            <td>${item.descripcion}</td>
+            <td>${item.nombre_categoria}</td>
+            <td>${item.stock_actual}</td>
+            <td class="d-flex gap-1">
+                <button class="btn btn-success btn-sm action-btn btn-add" title="Agregar" data-id="${item.id_producto}"><i class="bi bi-plus-lg"></i></button>
+                <button class="btn btn-secondary btn-sm action-btn btn-subtract" title="Quitar" data-id="${item.id_producto}"><i class="bi bi-dash-lg"></i></button>
+                ${rol === 'admin' ? `<button class="btn btn-primary btn-sm action-btn btn-modificar" title="Modificar" data-id="${item.id_producto}"><i class="bi bi-pencil-square"></i></button>` : ''}
+                ${rol === 'admin' ? `<button class="btn btn-danger btn-sm action-btn btn-eliminar" title="Eliminar" data-id="${item.id_producto}"><i class="bi bi-trash-fill"></i></button>` : ''}
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
 // Función para mostrar errores en la tabla
@@ -60,7 +61,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	obtenerInventario();
 
 	 // Inicializar el modal de eliminar (se crea en el DOM si no existe)
-    initModalEliminar();
+    if (decodificarToken() === 'admin') {
+        initModalEliminar();
+    }
 	iniciarModalAgregar();
 	iniciarModalQuitar();
 
