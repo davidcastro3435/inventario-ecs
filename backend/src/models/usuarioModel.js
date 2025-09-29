@@ -16,3 +16,12 @@ export async function createUser({ nombre, correo, contrasena, rol = 'usuario' }
   const { rows } = await pool.query(query, values);
   return rows[0];
 }
+
+// Obtener todos los correos de usuarios cuyo rol sea 'admin'
+export async function obtenerCorreosAdmins() {
+  const query = 'SELECT correo FROM usuario WHERE rol = $1';
+  const values = ['admin'];
+  const { rows } = await pool.query(query, values);
+  return rows.map(row => row.correo);
+}
+

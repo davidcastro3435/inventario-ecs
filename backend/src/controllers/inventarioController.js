@@ -2,6 +2,8 @@
 
 import { obtenerTodosLosItems, obtenerItemPorId, crearItem, eliminarItemPorId, modificarItemPorId, actualizarStockPorId, obtenerStockMensual } from '../models/inventarioModel.js';
 import { registrarMovimiento, eliminarMovimientosPorProducto } from '../models/movimientoModel.js';
+import { enviarAlertaBajoStock } from '../utils/emailService.js';
+import { obtenerCorreosAdmins } from '../models/usuarioModel.js';
 
 // Funcion para obtener todos los items
 export async function getItems(req, res) {
@@ -89,10 +91,10 @@ export async function patchItem(req, res) {
       return res.status(403).json({ mensaje: 'Acceso denegado: solo administradores pueden realizar esta acción.' });
     }
     const { id_producto } = req.params;
-    const { nombre, descripcion, id_categoria, precio_unitario, stock_actual, id_usuario } = req.body;
+    const { nombre, descripcion, id_categoria, precio_unitario, stock_actual, id_usuario, alarma } = req.body;
 
     // Validación básica
-    if (!nombre || !descripcion || !id_categoria || precio_unitario === undefined || stock_actual === undefined) {
+    if (!nombre || !descripcion || !id_categoria || precio_unitario === undefined || stock_actual === undefined || alarma === undefined) {
       return res.status(400).json({ mensaje: 'Faltan campos requeridos' });
     }
 
@@ -111,6 +113,7 @@ export async function patchItem(req, res) {
       id_categoria,
       precio_unitario,
       stock_actual,
+      alarma,
     });
 
     // Registrar movimiento si hay id_usuario
@@ -135,6 +138,15 @@ export async function patchItem(req, res) {
         tipo: 'ajuste'
       });
     }
+    
+    // Obtener correos de administradores
+    const correosAdmins = await obtenerCorreosAdmins();
+    if (existente.stock_actual > actualizado.stock_minimo && actualizado.stock_actual <= actualizado.stock_minimo) {
+      // Enviar alerta de bajo stock a cada admin
+      for (const correo of correosAdmins) {
+        await enviarAlertaBajoStock(correo, actualizado.nombre, actualizado.stock_actual, actualizado.stock_minimo);
+      }
+    }
 
     res.json(actualizado);
   } catch (error) {
@@ -157,6 +169,18 @@ export async function patchStockItem(req, res) {
       return res.status(404).json({ mensaje: 'Item no encontrado' });
     }
     const actualizado = await actualizarStockPorId(id_producto, stock_actual);
+
+    // Obtener correos de administradores
+    const correosAdmins = await obtenerCorreosAdmins();
+    // Obtener información actualizada del item
+    const itemActualizado = await obtenerItemPorId(id_producto);
+    if (existente.stock_actual > itemActualizado.stock_minimo && itemActualizado.stock_actual <= itemActualizado.stock_minimo) {
+      // Enviar alerta de bajo stock a cada admin
+      for (const correo of correosAdmins) {
+        await enviarAlertaBajoStock(correo, itemActualizado.nombre, itemActualizado.stock_actual, itemActualizado.stock_minimo);
+      }
+    }
+
     res.json(actualizado);
   } catch (error) {
     console.error('Error al actualizar el stock:', error);
