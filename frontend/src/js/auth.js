@@ -23,7 +23,7 @@ document.querySelector('.auth-form').addEventListener('submit', async function(e
 		if (response.ok && data.token) {
 			localStorage.setItem('token', data.token);
 			localStorage.setItem('userId', data.id);
-			window.location.href = 'inventory.html';
+			window.location.href = 'dashboard.html';
 		} else {
 			mostrarErrorModal('Valores incorrectos, intente nuevamente');
 		}
