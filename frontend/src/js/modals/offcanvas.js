@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('edit-descripcion').value = item.descripcion || '';
                 document.getElementById('edit-cantidad').value = item.stock_actual || '';
                 document.getElementById('edit-precio').value = item.precio_unitario || '';
-                document.getElementById('edit-cantidad-minima').value = item.cantidad_minima || '';
+                document.getElementById('edit-cantidad-minima').value = item.alarma || '';
 
                 // Cargar categorías
                 const categoriaSelect = document.getElementById('edit-categoria');
