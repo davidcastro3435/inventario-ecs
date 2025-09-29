@@ -22,6 +22,7 @@ export async function getItemPorId(req, res) {
   try {
     const { id_producto } = req.params;
     const item = await obtenerItemPorId(id_producto);
+    
     if (item) {
       res.json(item);
     } else {
@@ -40,10 +41,10 @@ export async function postItem(req, res) {
     if (!verificarAdmin(usuario)) {
       return res.status(403).json({ mensaje: 'Acceso denegado: solo administradores pueden realizar esta acción.' });
     }
+
     const datosItem = req.body;
     const { id_usuario } = req.body; // id_usuario debe venir en el body
     const itemCreado = await crearItem(datosItem);
-
     // Registrar movimiento de entrada
     if (itemCreado && id_usuario) {
       const descripcion = `Se añadieron ${itemCreado.stock_actual} unidades de ${itemCreado.nombre}.`;
@@ -73,7 +74,6 @@ export async function deleteItem(req, res) {
     const { id_producto } = req.params;
     await eliminarMovimientosPorProducto(id_producto);
     const itemEliminado = await eliminarItemPorId(id_producto);
-
     if (itemEliminado) {
       res.json({ mensaje: 'Item eliminado correctamente', item: itemEliminado });
     } else {
@@ -95,8 +95,6 @@ export async function patchItem(req, res) {
 
     const { id_producto } = req.params;
     const { nombre, descripcion, id_categoria, precio_unitario, stock_actual, id_usuario, alarma } = req.body;
-
-    // Validación básica
     if (!nombre || !descripcion || !id_categoria || precio_unitario === undefined || stock_actual === undefined || alarma === undefined) {
       return res.status(400).json({ mensaje: 'Faltan campos requeridos' });
     }
@@ -109,7 +107,6 @@ export async function patchItem(req, res) {
 
     // Guardar el stock actual de la base de datos antes de modificar
     const stock_db = existente.stock_actual;
-
     const actualizado = await modificarItemPorId(id_producto, {
       nombre,
       descripcion,
@@ -132,7 +129,6 @@ export async function patchItem(req, res) {
     
     // Obtener correos de administradores
     const correosAdmins = await obtenerCorreosAdmins();
-
     if (existente.stock_actual > actualizado.stock_minimo && actualizado.stock_actual <= actualizado.stock_minimo) {
       // Enviar alerta de bajo stock a cada admin
       for (const correo of correosAdmins) {
@@ -153,7 +149,6 @@ export async function patchStockItem(req, res) {
     const usuario = req.usuario; // Obtener usuario del token decodificado
     const { id_producto } = req.params;
     const { stock_actual } = req.body;
-
     if (stock_actual === undefined) {
       return res.status(400).json({ mensaje: 'El campo stock_actual es requerido' });
     }
@@ -163,10 +158,9 @@ export async function patchStockItem(req, res) {
     if (!existente) {
       return res.status(404).json({ mensaje: 'Item no encontrado' });
     }
-    const actualizado = await actualizarStockPorId(id_producto, stock_actual);
 
-    // Obtener correos de administradores
-    const correosAdmins = await obtenerCorreosAdmins();
+    const actualizado = await actualizarStockPorId(id_producto, stock_actual);
+    const correosAdmins = await obtenerCorreosAdmins(); // Obtener correos de administradores
     const itemActualizado = await obtenerItemPorId(id_producto);
     if (existente.stock_actual > itemActualizado.stock_minimo && itemActualizado.stock_actual <= itemActualizado.stock_minimo) {
       for (const correo of correosAdmins) {

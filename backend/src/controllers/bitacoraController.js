@@ -10,6 +10,7 @@ export async function getMovimientos(req, res) {
     } else {
       movimientos = await obtenerTodosLosMovimientos();
     }
+
     res.json(movimientos);
   } catch (error) {
     console.error('Error al obtener movimientos:', error);
@@ -21,7 +22,6 @@ export async function getMovimientos(req, res) {
 export async function registrarMovimientoBitacora({ id_producto, id_usuario, nombre, stock_db, stock_actual }) {
   let descripcionMovimiento = '';
   let cantidadMovimiento = 0;
-
   if (stock_actual < stock_db) {
     descripcionMovimiento = `Se disminuyó la cantidad de ${nombre} de ${stock_db} a ${stock_actual}`;
     cantidadMovimiento = stock_db - stock_actual;
