@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginUsuario, registrarUsuario } from '../controllers/usuarioController.js';
+import { loginUsuario, registrarUsuario, actualizarContrasenaUsuario, actualizarCorreoUsuario } from '../controllers/usuarioController.js';
 
 const router = express.Router();
 
@@ -9,5 +9,9 @@ router.post('/login', loginUsuario);
 
 // Ruta para registrar usuario
 router.post('/register', registrarUsuario);
+
+router.patch('/datos/contrasena', actualizarContrasenaUsuario);
+
+router.patch('/datos/correo', actualizarCorreoUsuario);
 
 export default router;

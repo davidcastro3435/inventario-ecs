@@ -1,5 +1,5 @@
 // Controlador para autenticación de usuario
-import { findUserByNombre, createUser } from '../models/usuarioModel.js';
+import { findUserByNombre, createUser, updateUserPasswordById, updateUserEmailById } from '../models/usuarioModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -53,6 +53,59 @@ export async function registrarUsuario(req, res) {
     const nuevoUsuario = await createUser({ nombre, correo, contrasena: hashedPassword, rol });
 
     res.status(201).json({ mensaje: 'Usuario registrado', usuario: { id: nuevoUsuario.id, nombre: nuevoUsuario.nombre, correo: nuevoUsuario.correo, rol: nuevoUsuario.rol } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+}
+
+// PATCH /datos/contrasena
+export async function actualizarContrasenaUsuario(req, res) {
+  try {
+    // Obtener el id del usuario desde el token decodificado (middleware debe poner req.usuario)
+    const usuarioToken = req.usuario;
+    if (!usuarioToken || !usuarioToken.id) {
+      return res.status(401).json({ mensaje: 'Token inválido o usuario no autenticado' });
+    }
+
+    const { nuevaContrasena } = req.body;
+    if (!nuevaContrasena) {
+      return res.status(400).json({ mensaje: 'Nueva contraseña requerida' });
+    }
+
+    // Buscar usuario en la base de datos
+    const hash = await bcrypt.hash(nuevaContrasena, 10);
+    const usuarioActualizado = await updateUserPasswordById(usuarioToken.id, hash);
+    if (!usuarioActualizado) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    res.json({ mensaje: 'Contraseña actualizada correctamente' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+}
+
+// PATCH /datos/correo
+export async function actualizarCorreoUsuario(req, res) {
+  try {
+    const usuarioToken = req.usuario;
+    if (!usuarioToken || !usuarioToken.id) {
+      return res.status(401).json({ mensaje: 'Token inválido o usuario no autenticado' });
+    }
+
+    const { nuevoCorreo } = req.body;
+    if (!nuevoCorreo) {
+      return res.status(400).json({ mensaje: 'Nuevo correo requerido' });
+    }
+
+    const usuarioActualizado = await updateUserEmailById(usuarioToken.id, nuevoCorreo);
+    if (!usuarioActualizado) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    res.json({ mensaje: 'Correo actualizado correctamente' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: 'Error en el servidor' });

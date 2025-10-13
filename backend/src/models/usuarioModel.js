@@ -1,10 +1,12 @@
 // Modelo para la tabla usuario
 import pool from '../db.js';
 
+// Encontrar usuario por nombre
 export async function findUserByNombre(nombre) {
   const query = 'SELECT * FROM usuario WHERE nombre = $1';
   const values = [nombre];
   const { rows } = await pool.query(query, values);
+
   return rows[0];
 }
 
@@ -14,6 +16,7 @@ export async function createUser({ nombre, correo, contrasena, rol = 'usuario' }
   const query = 'INSERT INTO usuario (nombre, correo, contrasena, rol) VALUES ($1, $2, $3, $4) RETURNING *';
   const values = [nombre, correo, contrasena, rol];
   const { rows } = await pool.query(query, values);
+
   return rows[0];
 }
 
@@ -22,6 +25,24 @@ export async function obtenerCorreosAdmins() {
   const query = 'SELECT correo FROM usuario WHERE rol = $1';
   const values = ['admin'];
   const { rows } = await pool.query(query, values);
+
   return rows.map(row => row.correo);
 }
 
+// Actualizar contraseña de usuario por id
+export async function updateUserPasswordById(id_usuario, nuevaContrasenaHash) {
+  const query = 'UPDATE usuario SET contrasena = $1 WHERE id_usuario = $2 RETURNING *';
+  const values = [nuevaContrasenaHash, id_usuario];
+  const { rows } = await pool.query(query, values);
+
+  return rows[0];
+}
+
+// Actualizar correo de usuario por id
+export async function updateUserEmailById(id_usuario, nuevoCorreo) {
+  const query = 'UPDATE usuario SET correo = $1 WHERE id_usuario = $2 RETURNING *';
+  const values = [nuevoCorreo, id_usuario];
+  const { rows } = await pool.query(query, values);
+
+  return rows[0];
+}
