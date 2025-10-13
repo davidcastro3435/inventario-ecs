@@ -30,17 +30,6 @@ export async function obtenerItemPorIdAPI(id_producto) {
   return await response.json();
 }
 
-export async function obtenerCategoriasAPI() {
-  const response = await fetch('http://localhost:3000/categoria/all', {
-    headers: {
-      ...getAuthHeaders()
-    }
-  });
-  if (!response.ok) throw new Error('Error al obtener categorías');
-  return await response.json();
-}
-
-
 export async function crearItemAPI(data) {
   const userId = localStorage.getItem('userId');
   const response = await fetch('http://localhost:3000/inventario/items', {
@@ -105,5 +94,15 @@ export async function obtenerStockMensualAPI() {
     }
   });
   if (!response.ok) throw new Error('Error al obtener stock mensual');
+  return await response.json();
+}
+
+export async function obtenerCategoriasAPI() {
+  const response = await fetch('http://localhost:3000/categoria/all', {
+    headers: {
+      ...getAuthHeaders()
+    }
+  });
+  if (!response.ok) throw new Error('Error al obtener categorías');
   return await response.json();
 }
