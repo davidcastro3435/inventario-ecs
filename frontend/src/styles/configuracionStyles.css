@@ -1,10 +1,7 @@
-
 /*
     configuracionStyles.css
     Estilos principales para la vista de la configuraciones
 */
-
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 
 /* ===================
    Reset y Base Global
@@ -12,9 +9,9 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Lato', Arial, sans-serif;
+    font-family: 'Roboto Flex', Arial, sans-serif;
     background: #DBE9EE;
-    color: #222;
+    color: #24273a;
     min-height: 100vh;
     }
 
@@ -71,6 +68,7 @@ body {
     cursor: pointer;
     transition: background 0.2s, box-shadow 0.2s;
     font-weight: 500;
+    height: 100%;
 }
 
 /* ============
@@ -109,6 +107,26 @@ body {
 .configuracion-table tr:nth-child(odd) {
     background: #fff;
 }
+
+/* ===================
+   Inputs de cambiar contraseña y correo
+=================== */
+.input-cambio-config {
+    max-width: 260px;
+    padding: 0.7rem 1.2rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.06);
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+    margin-bottom: 15px;
+}
+.input-cambio-config:focus {
+    border: 1.5px solid #2563eb;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.10);
+}
+
 
 /* ============
    Media Queries

@@ -9,7 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configuración | Inventario ECS</title>
     <!-- Estilos principales -->
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">    
+
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css">
 
@@ -37,10 +40,40 @@
                         <span class="configuracion-title">Configuraciones</span>
                     </div>
                     <div class="col-12 mt-3">
-                        <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNuevoUsuario" aria-controls="offcanvasNuevoUsuario">
+                        <div class="mb-3">
+                            <h4 class="mb-2">Cambiar contraseña</h4>
+                            <div class="input-group mb-2">
+                                <input type="password" class="form-control w-auto input-cambio-config me-2" placeholder="Nueva contraseña" id="inputNuevaContrasena">
+                                <button class="btn btn-primary" type="button" id="btnCambiarContrasena">Cambiar</button>
+                            </div>
+                            <div class="mb-3">
+                                <h4 class="mb-2">Cambiar correo</h4>
+                                <div class="input-group">
+                                    <input type="email" class="form-control w-auto input-cambio-config me-2" placeholder="Nuevo correo" id="inputNuevoCorreo">
+                                    <button class="btn btn-primary" type="button" id="btnCambiarCorreo">Cambiar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary float-end" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNuevoUsuario" aria-controls="offcanvasNuevoUsuario"  id="btnAbrirNuevoUsuario">
                             <i class="bi bi-person-plus"></i> Crear nuevo usuario
                         </button>
                     </div>
+                </div>
+                <div class="table-wrapper">
+                    <table class="table table-striped table-hover configuracion-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre de usuario</th>
+                                <th>Correo</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las filas de la tabla se llenarán dinámicamente -->
+                        </tbody>
+                    </table>
                 </div>
 
                 <!-- Offcanvas para crear nuevo usuario -->
@@ -71,7 +104,7 @@
                                 </select>
                             </div>
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Crear usuario</button>
+                                <button type="submit" class="btn btn-primary" id="btnCrearUsuario">Crear usuario</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas">Descartar</button>
                             </div>
                         </form>
