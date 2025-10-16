@@ -35,7 +35,6 @@ export function setupSidebarNavigation() {
 	if (configuracionesBtn) {
 		configuracionesBtn.addEventListener('click', function() {
 			window.location.href = 'configuracion.html';
-			alert('La página de configuraciones aún no está disponible.');
 		});
 	}
 }
