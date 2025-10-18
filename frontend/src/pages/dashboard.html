@@ -1,81 +1,274 @@
-<!--
-    dashboard.html
-    Vista principal del dashboard para Inventario ECS
--->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Inventario ECS</title>
-    <!-- Estilos principales -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">    
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Dashboard | Inventario ECS</title>
+        <!-- Estilos principales -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap"
+            rel="stylesheet"
+        />
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
-    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css"
+        />
 
-    <link rel="stylesheet" href="../styles/dashboardStyles.css">
-    <link rel="stylesheet" href="../styles/sidebar.css">
-</head>
-<body>
-    <div class="layout" style="background:#F9F7F7; min-height:100vh;">
-        <nav class="sidebar d-flex flex-column align-items-center py-4" style="background:#112D4E;">
-            <div class="mb-4">
-                <img src="../assets/ECS_fondo_transparente.png" alt="Logo ECS" style="height:60px;" />
-                <hr style="border:0; border-top:2px solid #e0e7ef; margin:1rem 0 0.5rem 0; width:100%; opacity:0.7;" />
-            </div>
-            <ul class="sidebar-menu w-100">
-                <li id="sidebar-dashboard" class="active d-flex align-items-center"><i class="bi bi-graph-up me-2"></i>Dashboard</li>
-                <li id="sidebar-inventario" class="d-flex align-items-center"><i class="bi bi-box-seam me-2"></i>Inventario</li>
-                <li id="sidebar-bitacora" class="d-flex align-items-center"><i class="bi bi-clipboard me-2"></i>Bitácora</li>
-                <li id="sidebar-configuraciones" class="d-flex align-items-center"><i class="bi bi-gear me-2"></i>Configuraciones</li>
-            </ul>
-        </nav>
-        <main style="flex:1;">
-            <section class="container" style="background:#F9F7F7; border-radius:1rem; width:100%; max-width:100%;">
-                <div style="width:100%;">
-                    <span class="dashboard-title">Dashboard</span>
-                    <!-- Valor total inventario -->
-                    <div id="valor-total-inventario-box" style="width:100%; max-width: 1000px; margin:20px 0 32px 0; border:2px solid #1B3C53; border-radius:10px; padding:16px; background:#EEEEEE; display:flex; flex-direction:column; align-items:center;">
-                        <span id="valor-total-inventario" style="font-size:2rem; font-weight:bold; color:#1B3C53;">0</span>
-                        <span style="font-size:1rem; color:#1B3C53; margin-top:4px;">Valor total inventario</span>
-                    </div>
-
-                    <!-- Stock mensual (proporción estándar, alineado a la izquierda) -->
-                    <section class="dashboard-charts" style="width:100%; max-width: 1000px; height: 400px; margin-bottom:32px; border:2px solid #1B3C53; background-color: #EEEEEE;">
-                        <h2>Stock Mensual</h2>
-                        <canvas id="stockMensualLineChart" class="chart-canvas" style="width:100%; max-width: 1000px; height:400px;"></canvas>
-                    </section>
-
-                    <!-- Items con menor stock -->
-                    <section class="dashboard-charts" style="width:100%; max-width: 1000px; height: 400px; margin-bottom:32px; border:2px solid #1B3C53; background-color: #EEEEEE;">
-                        <h2>Items con Menor Stock</h2>
-                        <canvas id="lowStockBarChart" class="chart-canvas" style="width:100%; max-width: 1000px; height:400px;"></canvas>
-                    </section>
-
-                    <!-- Inventario por categoría y productos con mayor valor total en una fila -->
-                    <div style="display:flex; gap:32px; margin-bottom:32px; ">
-                        <section class="dashboard-charts" style="flex:1; background-color: #F9F7F7; border:2px solid #1B3C53;">
-                            <h2>Inventario por Categoría</h2>
-                            <canvas id="inventoryCategoryChart" class="chart-canvas"></canvas>
-                        </section>
-                        <section class="dashboard-charts" style="flex:1; background-color: #F9F7F7; border:2px solid #1B3C53;">
-                            <h2>Productos con Mayor Valor Total</h2>
-                            <canvas id="topValueBarChart" class="chart-canvas" style="width:100%; max-width: 1000px; height:400px;"></canvas>
-                        </section>
-                    </div>
+        <link rel="stylesheet" href="../styles/dashboardStyles.css" />
+        <link rel="stylesheet" href="../styles/sidebar.css" />
+    </head>
+    <body>
+        <div class="layout" style="background: #f9f7f7; min-height: 100vh">
+            <nav
+                class="sidebar d-flex flex-column align-items-center py-4"
+                style="background: #112d4e"
+            >
+                <div class="mb-4">
+                    <img
+                        src="../assets/ECS_fondo_transparente.png"
+                        alt="Logo ECS"
+                        style="height: 60px"
+                    />
+                    <hr
+                        style="
+                            border: 0;
+                            border-top: 2px solid #e0e7ef;
+                            margin: 1rem 0 0.5rem 0;
+                            width: 100%;
+                            opacity: 0.7;
+                        "
+                    />
                 </div>
-            </section>
-        </main>
-    </div>
-   <!-- Lógica principal de la vista de dashboard -->
-    <script type="module" src="../js/dashboard.js"></script>
-    <script type="module">
-        import { setupSidebarNavigation } from '../js/sidebar.js';
-        setupSidebarNavigation();
-    </script>
-</body>
+                <ul class="sidebar-menu w-100">
+                    <li
+                        id="sidebar-dashboard"
+                        class="active d-flex align-items-center"
+                    >
+                        <i class="bi bi-graph-up me-2"></i>Dashboard
+                    </li>
+                    <li
+                        id="sidebar-inventario"
+                        class="d-flex align-items-center"
+                    >
+                        <i class="bi bi-box-seam me-2"></i>Inventario
+                    </li>
+                    <li id="sidebar-bitacora" class="d-flex align-items-center">
+                        <i class="bi bi-clipboard me-2"></i>Bitácora
+                    </li>
+                    <li
+                        id="sidebar-configuraciones"
+                        class="d-flex align-items-center"
+                    >
+                        <i class="bi bi-gear me-2"></i>Configuraciones
+                    </li>
+                </ul>
+            </nav>
+            <main style="flex: 1">
+                <section
+                    class="container"
+                    style="
+                        background: #f9f7f7;
+                        border-radius: 1rem;
+                        width: 100%;
+                        max-width: 100%;
+                    "
+                >
+                    <div style="width: 100%">
+                        <span class="dashboard-title">Dashboard</span>
+
+                        <!-- Contenedor principal (charts) -->
+                        <div
+                            style="
+                                display: flex;
+                                flex-direction: column;
+                                gap: 24px;
+                                width: 100%;
+                            "
+                        >
+                            <div>
+                                <!-- Valor total inventario -->
+                                <div
+                                    id="valor-total-inventario-box"
+                                    style="
+                                        width: 100%;
+                                        margin: 20px 0 32px 0;
+                                        border: 2px solid #1b3c53;
+                                        border-radius: 10px;
+                                        padding: 16px;
+                                        background: #eeeeee;
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                    "
+                                >
+                                    <span
+                                        id="valor-total-inventario"
+                                        style="
+                                            font-size: 2rem;
+                                            font-weight: bold;
+                                            color: #1b3c53;
+                                        "
+                                        >0</span
+                                    >
+                                    <span
+                                        style="
+                                            font-size: 1rem;
+                                            color: #1b3c53;
+                                            margin-top: 4px;
+                                        "
+                                        >Valor total inventario</span
+                                    >
+                                </div>
+
+                                <!-- Stock mensual -->
+                                <section
+                                    class="dashboard-charts"
+                                    style="
+                                        width: 100%;
+                                        height: 400px;
+                                        margin-bottom: 32px;
+                                        border: 2px solid #1b3c53;
+                                        background-color: #eeeeee;
+                                    "
+                                >
+                                    <h2>Stock Mensual</h2>
+                                    <canvas
+                                        id="stockMensualLineChart"
+                                        class="chart-canvas"
+                                        style="width: 100%; height: 400px"
+                                    ></canvas>
+                                </section>
+
+                                <!-- Items con menor stock (gráfico) -->
+                                <section
+                                    class="dashboard-charts"
+                                    style="
+                                        width: 100%;
+                                        height: 400px;
+                                        margin-bottom: 32px;
+                                        border: 2px solid #1b3c53;
+                                        background-color: #eeeeee;
+                                    "
+                                >
+                                    <h2>Items con Menor Stock</h2>
+                                    <canvas
+                                        id="lowStockBarChart"
+                                        class="chart-canvas"
+                                        style="width: 100%; height: 400px"
+                                    ></canvas>
+                                </section>
+
+                                <!-- Inventario por categoría y productos con mayor valor total en una fila -->
+                                <div
+                                    style="
+                                        display: flex;
+                                        gap: 32px;
+                                        margin-bottom: 32px;
+                                        flex-wrap: wrap;
+                                    "
+                                >
+                                    <section
+                                        class="dashboard-charts"
+                                        style="
+                                            flex: 1;
+                                            background-color: #f9f7f7;
+                                            border: 2px solid #1b3c53;
+                                            min-width: 280px;
+                                        "
+                                    >
+                                        <h2>Inventario por Categoría</h2>
+                                        <canvas
+                                            id="inventoryCategoryChart"
+                                            class="chart-canvas"
+                                        ></canvas>
+                                    </section>
+                                    <section
+                                        class="dashboard-charts"
+                                        style="
+                                            flex: 1;
+                                            background-color: #f9f7f7;
+                                            border: 2px solid #1b3c53;
+                                            min-width: 280px;
+                                        "
+                                    >
+                                        <h2>Productos con Mayor Valor Total</h2>
+                                        <canvas
+                                            id="topValueBarChart"
+                                            class="chart-canvas"
+                                            style="width: 100%; height: 400px"
+                                        ></canvas>
+                                    </section>
+                                </div>
+                            </div>
+
+                            <!-- TABLA ABAJO: Items con Menor Stock (ocupa todo el ancho debajo de los gráficos) -->
+                            <aside style="width: 100%">
+                                <div
+                                    style="
+                                        border: 2px solid #1b3c53;
+                                        border-radius: 12px;
+                                        background: #eeeeee;
+                                        padding: 12px;
+                                    "
+                                >
+                                    <h3
+                                        style="
+                                            margin: 0 0 12px 0;
+                                            font-size: 1.1rem;
+                                            color: #1b3c53;
+                                        "
+                                    >
+                                        Items con Menor Stock (Top 10)
+                                    </h3>
+                                    <div
+                                        style="
+                                            max-height: 420px;
+                                            overflow: auto;
+                                        "
+                                    >
+                                        <table
+                                            class="table table-sm table-striped lowstock-table"
+                                            style="margin-bottom: 0"
+                                        >
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 68px">
+                                                        ID
+                                                    </th>
+                                                    <th>Item</th>
+                                                    <th style="width: 92px">
+                                                        Stock
+                                                    </th>
+                                                    <th style="width: 92px">
+                                                        Mínimo
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="low-stock-table-body">
+                                                <!-- Filas generadas desde dashboard.js -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <!-- Lógica principal de la vista de dashboard -->
+        <script type="module" src="../js/dashboard.js"></script>
+        <script type="module">
+            import { setupSidebarNavigation } from "../js/sidebar.js";
+            setupSidebarNavigation();
+        </script>
+    </body>
 </html>

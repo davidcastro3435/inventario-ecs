@@ -3,15 +3,14 @@
     Estilos principales para la vista del dashboard
 */
 
-
 /* ===================
    Reset y Base Global
 =================== */
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Roboto Flex', Arial, sans-serif;
-    background: #DBE9EE;
+    font-family: "Roboto Flex", Arial, sans-serif;
+    background: #dbe9ee;
     color: #222;
     min-height: 100vh;
 }
@@ -67,7 +66,9 @@ body {
     border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s, box-shadow 0.2s;
+    transition:
+        background 0.2s,
+        box-shadow 0.2s;
     font-weight: 500;
 }
 
@@ -76,7 +77,6 @@ body {
 ============= */
 
 .chart-canvas {
-    max-width: 400px;
     max-height: 400px;
     width: 100%;
     height: auto;
@@ -93,17 +93,54 @@ body {
 
 .dashboard-charts {
     flex: 1 1 400px;
-    max-width: 500px;
     min-width: 320px;
     box-sizing: border-box;
     background: #fff;
     padding: 24px 16px;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     margin-bottom: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* ============
+   Tabla de inventario
+============= */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+.lowstock-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.3rem;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(37, 99, 235, 0.04);
+}
+.lowstock-table th,
+.lowstock-table td {
+    padding: 1rem 0.8rem;
+    text-align: left;
+}
+.lowstock-table th {
+    background: #3f72af;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.05rem;
+    border-bottom: 2px solid #e0e7ef;
+}
+.lowstock-table tr {
+    border-bottom: 1px solid #e5e7eb;
+}
+.lowstock-table tr:nth-child(even) {
+    background: #f3f6fa;
+}
+.lowstock-table tr:nth-child(odd) {
+    background: #fff;
 }
 
 /* ============
@@ -150,7 +187,8 @@ body {
     .header-logo {
         font-size: 1.1rem;
     }
-    .bitacora-table th, .bitacora-table td {
+    .bitacora-table th,
+    .bitacora-table td {
         padding: 0.7rem 0.4rem;
         font-size: 0.97rem;
     }
