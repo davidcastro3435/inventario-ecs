@@ -36,3 +36,16 @@ export async function patchCorreoUsuario(data) {
   if (!response.ok) throw new Error('Error al modificar el correo del usuario');
   return await response.json();
 }
+
+export async function crearUsuarioAPI(data) {
+  const response = await fetch('http://localhost:3000/usuario/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders()
+    },
+    body: JSON.stringify({ ...data }),
+  });
+  if (!response.ok) throw new Error('Error al crear el usuario');
+  return await response.json();
+}
