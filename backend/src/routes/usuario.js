@@ -1,17 +1,25 @@
-import express from 'express';
-import { loginUsuario, registrarUsuario, actualizarContrasenaUsuario, actualizarCorreoUsuario } from '../controllers/usuarioController.js';
+import express from "express";
+import {
+  loginUsuario,
+  registrarUsuario,
+  actualizarContrasenaUsuario,
+  actualizarCorreoUsuario,
+  obtenerUsuarios,
+} from "../controllers/usuarioController.js";
 
 const router = express.Router();
 
-
 // Ruta para login de usuario
-router.post('/login', loginUsuario);
+router.post("/login", loginUsuario);
 
 // Ruta para registrar usuario
-router.post('/register', registrarUsuario);
+router.post("/register", registrarUsuario);
 
-router.patch('/datos/contrasena', actualizarContrasenaUsuario);
+// Obtener lista de usuarios (solo administradores)
+router.get("/", obtenerUsuarios);
 
-router.patch('/datos/correo', actualizarCorreoUsuario);
+router.patch("/datos/contrasena", actualizarContrasenaUsuario);
+
+router.patch("/datos/correo", actualizarCorreoUsuario);
 
 export default router;
