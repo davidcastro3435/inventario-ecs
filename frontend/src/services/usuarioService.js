@@ -63,3 +63,14 @@ export async function obtenerUsuariosAPI() {
   if (!response.ok) throw new Error("Error al obtener inventario");
   return await response.json();
 }
+
+export async function eliminarUsuarioAPI(id) {
+  const response = await fetch(`http://localhost:3000/usuario/${id}`, {
+    method: "DELETE",
+    headers: {
+      ...getAuthHeaders(),
+    },
+  });
+  if (!response.ok) throw new Error("Error al eliminar usuario");
+  return await response.json();
+}
