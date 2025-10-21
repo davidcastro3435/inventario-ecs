@@ -5,7 +5,13 @@ import {
   patchContrasenaUsuario,
   patchCorreoUsuario,
   obtenerUsuariosAPI,
+  eliminarUsuarioAPI,
 } from "../services/usuarioService.js";
+
+import {
+  initModalEliminar,
+  mostrarModalEliminar,
+} from "./modals/modalEliminar.js";
 
 // Función para decodificar el token y obtener el rol del usuario
 function decodificarToken() {
@@ -85,14 +91,67 @@ function renderizarTablaUsuarios(usuarios) {
   usuarios.forEach((usr) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-			<td>${usr.id || ""}</td>
+			<td>${usr.id_usuario || ""}</td>
 			<td>${usr.nombre || ""}</td>
 			<td>${usr.correo || ""}</td>
 			<td>${usr.rol || ""}</td>
 			<td>${new Date(usr.ultimo_acceso || usr.fecha).toLocaleString()}</td>
+			<td class="d-flex gap-1">
+        <button class="btn btn-primary btn-sm action-btn btn-reset" title="Reiniciar" data-id="${usr.id_usuario}"><i class="bi bi-arrow-counterclockwise"></i></button>
+        <button class="btn btn-danger btn-sm action-btn btn-delete" title="Eliminar" data-id="${usr.id_usuario}"><i class="bi bi-trash-fill"></i></button>
+      </td>
 		`;
     tbody.appendChild(tr);
   });
 }
 
-document.addEventListener("DOMContentLoaded", cargarUsuarios);
+document.addEventListener("DOMContentLoaded", () => {
+  // Cargar la tabla inicialmente
+  cargarUsuarios();
+
+  initModalEliminar();
+  // Inicializar modal eliminar solo para admins
+  if (decodificarToken() === "admin") {
+    // Delegación de eventos para botones de eliminar en la tabla de configuración
+    const tbody = document.querySelector(".configuracion-table tbody");
+    if (tbody) {
+      tbody.addEventListener("click", async (e) => {
+        const btnDelete = e.target.closest(".btn-delete");
+        if (!btnDelete) return;
+
+        const id = btnDelete.getAttribute("data-id");
+        // Intentar obtener el nombre desde la fila para mostrar en el modal
+        let nombre = "";
+        const tr = btnDelete.closest("tr");
+        if (tr) {
+          const nombreCell = tr.querySelector("td:nth-child(2)");
+          if (nombreCell) nombre = nombreCell.textContent.trim();
+        }
+
+        try {
+          mostrarModalEliminar({
+            id,
+            nombre: nombre,
+            onDescartar: () => {},
+            onEliminar: async (userId) => {
+              try {
+                await eliminarUsuarioAPI(userId);
+                await cargarUsuarios();
+                alert("Usuario eliminado correctamente");
+              } catch (err) {
+                alert("Error al eliminar usuario: " + (err.message || err));
+              }
+            },
+          });
+        } catch (err) {
+          alert(
+            "Error al mostrar el modal de eliminar: " + (err.message || err),
+          );
+        }
+      });
+    }
+  } else {
+    // Si no es admin, solo cargar usuarios (sin inicializar modal)
+    cargarUsuarios();
+  }
+});

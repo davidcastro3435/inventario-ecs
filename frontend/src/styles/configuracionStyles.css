@@ -9,11 +9,11 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Roboto Flex', Arial, sans-serif;
-    background: #DBE9EE;
+    font-family: "Roboto Flex", Arial, sans-serif;
+    background: #dbe9ee;
     color: #24273a;
     min-height: 100vh;
-    }
+}
 
 /* ============
    Layout
@@ -28,7 +28,7 @@ body {
 ============= */
 .container {
     margin: 0;
-    background: #F9F7F7;
+    background: #f9f7f7;
     border-radius: 0;
     box-shadow: 0 4px 24px rgba(37, 99, 235, 0.08);
     padding: 2.5rem 2rem 2rem 2rem;
@@ -66,9 +66,62 @@ body {
     border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.2s, box-shadow 0.2s;
+    transition:
+        background 0.2s,
+        box-shadow 0.2s;
     font-weight: 500;
     height: 100%;
+}
+
+/* Botones de acción en la tabla */
+.action-btn {
+    background: transparent;
+    border: 1.5px solid;
+    border-radius: 5px;
+    padding: 0.15em 0.5em;
+    margin-right: 0.4em;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        color 0.2s,
+        border-color 0.2s;
+}
+.action-btn:last-child {
+    margin-right: 0;
+}
+.btn-delete {
+    color: #d90429;
+    border-color: #d90429;
+}
+.btn-delete:hover {
+    background: #d90429;
+    color: #fff;
+}
+.btn-reset {
+    color: #0077b6;
+    border-color: #0077b6;
+}
+.btn-reset:hover {
+    background: #0077b6;
+    color: #fff;
+}
+
+.btn-add {
+    color: #22c55e;
+    border-color: #22c55e;
+}
+.btn-add:hover {
+    background: #22c55e;
+    color: #fff;
+}
+.btn-subtract {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+.btn-subtract:hover {
+    background: #6c757d;
+    color: #fff;
 }
 
 /* ============
@@ -87,12 +140,13 @@ body {
     overflow: hidden;
     box-shadow: 0 2px 12px rgba(37, 99, 235, 0.04);
 }
-.configuracion-table th, .configuracion-table td {
+.configuracion-table th,
+.configuracion-table td {
     padding: 1rem 0.8rem;
     text-align: left;
 }
 .configuracion-table th {
-    background: #3F72AF;
+    background: #3f72af;
     color: #fff;
     font-weight: 600;
     font-size: 1.05rem;
@@ -119,14 +173,15 @@ body {
     font-size: 1rem;
     box-shadow: 0 2px 8px rgba(37, 99, 235, 0.06);
     outline: none;
-    transition: border 0.2s, box-shadow 0.2s;
+    transition:
+        border 0.2s,
+        box-shadow 0.2s;
     margin-bottom: 15px;
 }
 .input-cambio-config:focus {
     border: 1.5px solid #2563eb;
-    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.10);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
 }
-
 
 /* ============
    Media Queries
@@ -172,10 +227,9 @@ body {
     .header-logo {
         font-size: 1.1rem;
     }
-    .bitacora-table th, .bitacora-table td {
+    .bitacora-table th,
+    .bitacora-table td {
         padding: 0.7rem 0.4rem;
         font-size: 0.97rem;
     }
 }
-
-
