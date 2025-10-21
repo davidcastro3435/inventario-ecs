@@ -5,6 +5,7 @@ import {
   actualizarContrasenaUsuario,
   actualizarCorreoUsuario,
   obtenerUsuarios,
+  eliminarUsuarioPorId,
 } from "../controllers/usuarioController.js";
 
 const router = express.Router();
@@ -21,5 +22,7 @@ router.get("/", obtenerUsuarios);
 router.patch("/datos/contrasena", actualizarContrasenaUsuario);
 
 router.patch("/datos/correo", actualizarCorreoUsuario);
+
+router.delete("/:id", eliminarUsuarioPorId);
 
 export default router;

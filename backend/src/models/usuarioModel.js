@@ -71,3 +71,12 @@ export async function updateUserEmailById(id_usuario, nuevoCorreo) {
 
   return rows[0];
 }
+
+// Funcion para eliminar un usuario por id
+export async function deleteUserById(id_usuario) {
+  const result = await pool.query(
+    "DELETE FROM usuario WHERE id_usuario = $1 RETURNING *",
+    [id_usuario],
+  );
+  return result.rows[0] || null;
+}

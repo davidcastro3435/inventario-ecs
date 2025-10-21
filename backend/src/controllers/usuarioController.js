@@ -6,6 +6,7 @@ import {
   updateUserEmailById,
   getAllUsersBasic,
   updateLastAccessById,
+  deleteUserById,
 } from "../models/usuarioModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -74,17 +75,15 @@ export async function registrarUsuario(req, res) {
       rol,
     });
 
-    res
-      .status(201)
-      .json({
-        mensaje: "Usuario registrado",
-        usuario: {
-          id: nuevoUsuario.id,
-          nombre: nuevoUsuario.nombre,
-          correo: nuevoUsuario.correo,
-          rol: nuevoUsuario.rol,
-        },
-      });
+    res.status(201).json({
+      mensaje: "Usuario registrado",
+      usuario: {
+        id: nuevoUsuario.id,
+        nombre: nuevoUsuario.nombre,
+        correo: nuevoUsuario.correo,
+        rol: nuevoUsuario.rol,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error en el servidor" });
@@ -96,12 +95,10 @@ export async function obtenerUsuarios(req, res) {
   try {
     const usuarioToken = req.usuario;
     if (!usuarioToken || usuarioToken.rol !== "admin") {
-      return res
-        .status(403)
-        .json({
-          mensaje:
-            "Acceso denegado: solo administradores pueden ver la lista de usuarios",
-        });
+      return res.status(403).json({
+        mensaje:
+          "Acceso denegado: solo administradores pueden ver la lista de usuarios",
+      });
     }
 
     const usuarios = await getAllUsersBasic();
@@ -173,4 +170,36 @@ export async function actualizarCorreoUsuario(req, res) {
     console.error(error);
     res.status(500).json({ mensaje: "Error en el servidor" });
   }
+}
+
+// Funcion para eliminar un usuario por id
+export async function eliminarUsuarioPorId(req, res) {
+  try {
+    const usuario = req.usuario; // Obtener usuario del token decodificado
+    if (!verificarAdmin(usuario)) {
+      return res.status(403).json({
+        mensaje:
+          "Acceso denegado: solo administradores pueden realizar esta acción.",
+      });
+    }
+
+    // La ruta usa /:id -> leemos `id`
+    const { id } = req.params;
+    const usuarioEliminado = await deleteUserById(id);
+    if (usuarioEliminado) {
+      res.json({
+        mensaje: "Usuario eliminado correctamente",
+        usuario: usuarioEliminado,
+      });
+    } else {
+      res.status(404).json({ mensaje: "Usuario no encontrado" });
+    }
+  } catch (error) {
+    console.error("Error al eliminar el usuario:", error);
+    res.status(500).json({ mensaje: "Error al eliminar el usuario" });
+  }
+}
+
+function verificarAdmin(usuario) {
+  return usuario && usuario.rol === "admin";
 }
