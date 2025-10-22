@@ -172,6 +172,47 @@ export async function actualizarCorreoUsuario(req, res) {
   }
 }
 
+/**
+ * PATCH /usuario/:id/contrasena
+ * Permite a un administrador reiniciar la contraseña de otro usuario.
+ * Body esperado: { nuevaContrasena: 'valor' }
+ */
+export async function reiniciarContrasenaUsuarioPorId(req, res) {
+  try {
+    const usuarioToken = req.usuario; // middleware debe proveer req.usuario
+    if (!verificarAdmin(usuarioToken)) {
+      return res.status(403).json({
+        mensaje:
+          "Acceso denegado: solo administradores pueden realizar esta acción.",
+      });
+    }
+
+    const { id } = req.params;
+    const { nuevaContrasena } = req.body;
+
+    if (
+      !nuevaContrasena ||
+      typeof nuevaContrasena !== "string" ||
+      !nuevaContrasena.trim()
+    ) {
+      return res.status(400).json({ mensaje: "Nueva contraseña requerida" });
+    }
+
+    // Hashear la nueva contraseña y actualizar el usuario
+    const hashed = await bcrypt.hash(nuevaContrasena, 10);
+    const usuarioActualizado = await updateUserPasswordById(id, hashed);
+
+    if (!usuarioActualizado) {
+      return res.status(404).json({ mensaje: "Usuario no encontrado" });
+    }
+
+    res.json({ mensaje: "Contraseña reiniciada correctamente" });
+  } catch (error) {
+    console.error("Error al reiniciar la contraseña:", error);
+    res.status(500).json({ mensaje: "Error en el servidor" });
+  }
+}
+
 // Funcion para eliminar un usuario por id
 export async function eliminarUsuarioPorId(req, res) {
   try {

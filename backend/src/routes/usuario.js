@@ -5,6 +5,7 @@ import {
   actualizarContrasenaUsuario,
   actualizarCorreoUsuario,
   obtenerUsuarios,
+  reiniciarContrasenaUsuarioPorId,
   eliminarUsuarioPorId,
 } from "../controllers/usuarioController.js";
 
@@ -22,6 +23,9 @@ router.get("/", obtenerUsuarios);
 router.patch("/datos/contrasena", actualizarContrasenaUsuario);
 
 router.patch("/datos/correo", actualizarCorreoUsuario);
+
+// Admin: reiniciar contraseña de otro usuario
+router.patch("/:id/contrasena", reiniciarContrasenaUsuarioPorId);
 
 router.delete("/:id", eliminarUsuarioPorId);
 
