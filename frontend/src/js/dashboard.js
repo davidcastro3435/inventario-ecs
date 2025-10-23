@@ -4,6 +4,11 @@ import {
   obtenerStockMensualAPI,
 } from "../services/inventarioService.js";
 
+import { requireAuth } from "./authGuard.js";
+
+// Requerir autenticación al cargar el módulo; redirige si el token está ausente o expirado
+requireAuth();
+
 const inventario = await obtenerInventarioAPI();
 const categorias = await obtenerCategoriasAPI();
 

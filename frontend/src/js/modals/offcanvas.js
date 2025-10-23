@@ -9,6 +9,8 @@ import {
   crearCategoriaAPI,
 } from "../../services/inventarioService.js";
 
+import { showToast } from "../toastHelper.js";
+
 document.addEventListener("DOMContentLoaded", () => {
   // --- Offcanvas Crear Item ---
   const btnCreate = document.getElementById("btn-create");
@@ -65,7 +67,10 @@ document.addEventListener("DOMContentLoaded", () => {
         !Number.isInteger(Number(cantidad)) ||
         !Number.isInteger(Number(cantidadMinima))
       ) {
-        alert("La cantidad y la cantidad mínima deben ser enteros.");
+        showToast(
+          "La cantidad y la cantidad mínima deben ser enteros.",
+          "warning",
+        );
         return;
       }
 
@@ -80,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         await crearItemAPI(data);
-        alert("Item creado correctamente");
+        showToast("Item creado correctamente", "success");
         if (typeof obtenerInventarioAPI === "function") obtenerInventarioAPI();
 
         const offcanvas = bootstrap.Offcanvas.getInstance(
@@ -89,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (offcanvas) offcanvas.hide();
         formCreate.reset();
       } catch (err) {
-        alert("Error al crear el item: " + (err.message || err));
+        showToast("Error al crear el item: " + (err.message || err), "danger");
       }
     });
   }
@@ -109,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const item = await obtenerItemPorIdAPI(id);
 
         if (!item) {
-          alert("No se encontró el item.");
+          showToast("No se encontró el item.", "warning");
           return;
         }
 
@@ -150,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         formEdit.dataset.itemId = id;
       } catch (err) {
-        alert("Error al cargar el item: " + (err.message || err));
+        showToast("Error al cargar el item: " + (err.message || err), "danger");
       }
     });
   }
@@ -171,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         await patchItemAPI(id, data);
-        alert("Item modificado correctamente");
+        showToast("Item creado correctamente", "success");
         if (typeof obtenerInventarioAPI === "function") obtenerInventarioAPI();
 
         const offcanvas = bootstrap.Offcanvas.getInstance(
@@ -180,7 +185,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (offcanvas) offcanvas.hide();
         formEdit.reset();
       } catch (err) {
-        alert("Error al modificar el item: " + (err.message || err));
+        showToast(
+          "Error al modificar el item: " + (err.message || err),
+          "danger",
+        );
       }
     });
   }
@@ -206,17 +214,17 @@ document.addEventListener("DOMContentLoaded", () => {
         .getElementById("categoriaDescripcion")
         .value.trim();
       if (!nombre || !descripcion) {
-        alert("Completa todos los campos.");
+        showToast("Completa todos los campos.", "warning");
         return;
       }
       try {
         await crearCategoriaAPI({ nombre, descripcion });
-        alert("Categoría creada correctamente");
+        showToast("Categoría creada correctamente", "success");
         formCategoria.reset();
         const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasCategoria);
         if (offcanvas) offcanvas.hide();
       } catch (err) {
-        alert("Error al crear la categoría");
+        showToast("Error al crear la categoría", "danger");
       }
     });
   }

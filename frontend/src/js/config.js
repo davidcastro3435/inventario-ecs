@@ -19,6 +19,12 @@ import {
   mostrarModalReiniciar,
 } from "./modals/modalReiniciar.js";
 
+import { requireAuth } from "./authGuard.js";
+import { showToast } from "./toastHelper.js";
+
+// Requerir autenticación al cargar el módulo; redirige si el token está ausente o expirado
+requireAuth();
+
 // Función para decodificar el token y obtener el rol del usuario
 function decodificarToken() {
   const token = localStorage.getItem("token");
@@ -38,16 +44,16 @@ document.addEventListener("DOMContentLoaded", () => {
     btnCambiarContrasena.addEventListener("click", async () => {
       const nuevaContrasena = inputNuevaContrasena.value.trim();
       if (!nuevaContrasena || nuevaContrasena.length < 6) {
-        alert("La contraseña debe tener al menos 6 caracteres.");
+        showToast("La contraseña debe tener al menos 6 caracteres.", "warning");
         return;
       }
 
       try {
         await patchContrasenaUsuario({ nuevaContrasena });
-        alert("Contraseña actualizada correctamente.");
+        showToast("Contraseña actualizada correctamente.", "success");
         inputNuevaContrasena.value = "";
       } catch (err) {
-        alert("Error al actualizar la contraseña.");
+        showToast("Error al actualizar la contraseña.", "danger");
       }
     });
   }
@@ -64,16 +70,16 @@ document.addEventListener("DOMContentLoaded", () => {
       // Validación básica de correo
       const correoRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
       if (!nuevoCorreo || !correoRegex.test(nuevoCorreo)) {
-        alert("Introduce un correo electrónico válido.");
+        showToast("Introduce un correo electrónico válido.", "warning");
         return;
       }
 
       try {
         await patchCorreoUsuario({ nuevoCorreo });
-        alert("Correo actualizado correctamente.");
+        showToast("Correo actualizado correctamente.", "success");
         inputNuevoCorreo.value = "";
       } catch (err) {
-        alert("Error al actualizar el correo.");
+        showToast("Error al actualizar el correo.", "danger");
       }
     });
   }
@@ -155,17 +161,22 @@ document.addEventListener("DOMContentLoaded", () => {
               try {
                 await reiniciarContrasenaUsuario(userId, nuevaContrasena);
                 await cargarUsuarios();
-                alert(
-                  `Contraseña reiniciada a "${nuevaContrasena}" para ${nombre || userId}`,
+                showToast(
+                  `Contraseña reiniciada a \"${nuevaContrasena}\" para ${nombre || userId}`,
+                  "success",
                 );
               } catch (err) {
-                alert("Error al reiniciar contraseña: " + (err.message || err));
+                showToast(
+                  "Error al reiniciar contraseña: " + (err.message || err),
+                  "danger",
+                );
               }
             },
           });
         } catch (err) {
-          alert(
+          showToast(
             "Error al mostrar el modal de reiniciar: " + (err.message || err),
+            "danger",
           );
         }
 
@@ -192,14 +203,20 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
               await eliminarUsuarioAPI(userId);
               await cargarUsuarios();
-              alert("Usuario eliminado correctamente");
+              showToast("Usuario eliminado correctamente", "success");
             } catch (err) {
-              alert("Error al eliminar usuario: " + (err.message || err));
+              showToast(
+                "Error al eliminar usuario: " + (err.message || err),
+                "danger",
+              );
             }
           },
         });
       } catch (err) {
-        alert("Error al mostrar el modal de eliminar: " + (err.message || err));
+        showToast(
+          "Error al mostrar el modal de eliminar: " + (err.message || err),
+          "danger",
+        );
       }
     });
   }

@@ -25,6 +25,69 @@ import {
   mostrarModalQuitar,
 } from "./modals/modalQuitar.js";
 
+import { requireAuth } from "./authGuard.js";
+
+// Requerir autenticación al cargar el módulo; redirige si el token está ausente o expirado
+requireAuth();
+
+// -----------------------
+// Toast helper (Bootstrap)
+// -----------------------
+// Crea un contenedor de toasts en la esquina superior derecha si no existe
+function ensureToastContainer() {
+  if (document.getElementById("toast-container")) return;
+  const container = document.createElement("div");
+  container.id = "toast-container";
+  // Posicionar en esquina superior derecha
+  container.style.position = "fixed";
+  container.style.top = "1rem";
+  container.style.right = "1rem";
+  container.style.zIndex = "1080"; // por encima de la mayoría de elementos
+  container.style.display = "flex";
+  container.style.flexDirection = "column";
+  container.style.gap = "0.5rem";
+  document.body.appendChild(container);
+}
+
+// Muestra un toast usando Bootstrap 5
+// type puede ser: 'primary'|'secondary'|'success'|'danger'|'warning'|'info'|'light'|'dark'
+function showToast(message, type = "primary", delay = 4000) {
+  ensureToastContainer();
+  const container = document.getElementById("toast-container");
+
+  const toastEl = document.createElement("div");
+  toastEl.className = `toast align-items-center text-bg-${type} border-0`;
+  toastEl.setAttribute("role", "alert");
+  toastEl.setAttribute("aria-live", "assertive");
+  toastEl.setAttribute("aria-atomic", "true");
+
+  // Construir contenido del toast
+  toastEl.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body" style="white-space: pre-wrap;">${String(message)}</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  `;
+
+  container.appendChild(toastEl);
+
+  // Inicializar y mostrar usando el objeto global `bootstrap`
+  try {
+    const toast = new bootstrap.Toast(toastEl, { delay });
+    toast.show();
+    // Eliminar del DOM cuando se oculte
+    toastEl.addEventListener("hidden.bs.toast", () => {
+      try {
+        toastEl.remove();
+      } catch (e) {}
+    });
+  } catch (e) {
+    // Si por alguna razón Bootstrap no está disponible, caer en fallback a console
+    console.warn("Bootstrap Toast no disponible:", e);
+    console.log(message);
+  }
+}
+
 // Función para obtener los items del API usando el service
 async function obtenerInventario() {
   try {
@@ -96,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
       try {
         const item = await obtenerItemPorIdAPI(id);
         if (!item) {
-          alert("No se encontró el item.");
+          showToast("No se encontró el item.", "danger");
           return;
         }
 
@@ -107,11 +170,11 @@ document.addEventListener("DOMContentLoaded", function () {
           onEliminar: async (itemId) => {
             await eliminarItemAPI(itemId);
             obtenerInventario();
-            alert(`Item ${item.nombre} eliminado correctamente`);
+            showToast(`Item ${item.nombre} eliminado correctamente`, "success");
           },
         });
       } catch (err) {
-        alert("Error al cargar el item: " + (err.message || err));
+        showToast("Error al cargar el item: " + (err.message || err), "danger");
       }
     });
   }
@@ -126,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
           const item = await obtenerItemPorIdAPI(id);
           if (!item) {
-            alert("No se encontró el item.");
+            showToast("No se encontró el item.", "danger");
             return;
           }
           mostrarModalAgregar({
@@ -138,14 +201,20 @@ document.addEventListener("DOMContentLoaded", function () {
                   stock_actual: Number(item.stock_actual) + Number(cantidad),
                 });
                 obtenerInventario();
-                alert(`Stock agregado correctamente`);
+                showToast(`Stock agregado correctamente`, "success");
               } catch (err) {
-                alert("Error al agregar stock: " + (err.message || err));
+                showToast(
+                  "Error al agregar stock: " + (err.message || err),
+                  "danger",
+                );
               }
             },
           });
         } catch (err) {
-          alert("Error al cargar el item: " + (err.message || err));
+          showToast(
+            "Error al cargar el item: " + (err.message || err),
+            "danger",
+          );
         }
       }
     });
@@ -161,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
           const item = await obtenerItemPorIdAPI(id);
           if (!item) {
-            alert("No se encontró el item.");
+            showToast("No se encontró el item.", "danger");
             return;
           }
           mostrarModalQuitar({
@@ -174,14 +243,20 @@ document.addEventListener("DOMContentLoaded", function () {
                   stock_actual: Number(item.stock_actual) - Number(cantidad),
                 });
                 obtenerInventario();
-                alert(`Stock removido correctamente`);
+                showToast(`Stock removido correctamente`, "success");
               } catch (err) {
-                alert("Error al remover stock: " + (err.message || err));
+                showToast(
+                  "Error al remover stock: " + (err.message || err),
+                  "danger",
+                );
               }
             },
           });
         } catch (err) {
-          alert("Error al cargar el item: " + (err.message || err));
+          showToast(
+            "Error al cargar el item: " + (err.message || err),
+            "danger",
+          );
         }
       }
     });
