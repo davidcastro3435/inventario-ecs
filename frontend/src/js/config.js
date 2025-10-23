@@ -6,12 +6,18 @@ import {
   patchCorreoUsuario,
   obtenerUsuariosAPI,
   eliminarUsuarioAPI,
+  reiniciarContrasenaUsuario,
 } from "../services/usuarioService.js";
 
 import {
   initModalEliminar,
   mostrarModalEliminar,
 } from "./modals/modalEliminar.js";
+
+import {
+  initModalReiniciar,
+  mostrarModalReiniciar,
+} from "./modals/modalReiniciar.js";
 
 // Función para decodificar el token y obtener el rol del usuario
 function decodificarToken() {
@@ -110,12 +116,59 @@ document.addEventListener("DOMContentLoaded", () => {
   cargarUsuarios();
 
   initModalEliminar();
+  initModalReiniciar();
   // Inicializar modal eliminar solo para admins
   if (decodificarToken() === "admin") {
     // Delegación de eventos para botones de eliminar en la tabla de configuración
     const tbody = document.querySelector(".configuracion-table tbody");
     if (tbody) {
       tbody.addEventListener("click", async (e) => {
+        // Prioritize reset button (btn-reset) then delete button
+        const btnReset = e.target.closest(".btn-reset");
+        if (btnReset) {
+          const id = btnReset.getAttribute("data-id");
+          let nombre = "";
+          const tr = btnReset.closest("tr");
+          if (tr) {
+            const nombreCell = tr.querySelector("td:nth-child(2)");
+            if (nombreCell) nombre = nombreCell.textContent.trim();
+          }
+
+          try {
+            mostrarModalReiniciar({
+              id,
+              nombre: nombre || `ID ${id}`,
+              onDescartar: () => {},
+              onReiniciar: async (userId, nuevaContrasena) => {
+                try {
+                  // Usar el servicio reiniciarContrasenaUsuario en lugar de fetch directo
+                  try {
+                    await reiniciarContrasenaUsuario(userId, nuevaContrasena);
+                    await cargarUsuarios();
+                    alert(
+                      `Contraseña reiniciada a "${nuevaContrasena}" para ${nombre || userId}`,
+                    );
+                  } catch (err) {
+                    alert(
+                      "Error al reiniciar contraseña: " + (err.message || err),
+                    );
+                  }
+                } catch (err) {
+                  alert(
+                    "Error al reiniciar contraseña: " + (err.message || err),
+                  );
+                }
+              },
+            });
+          } catch (err) {
+            alert(
+              "Error al mostrar el modal de reiniciar: " + (err.message || err),
+            );
+          }
+
+          return;
+        }
+
         const btnDelete = e.target.closest(".btn-delete");
         if (!btnDelete) return;
 

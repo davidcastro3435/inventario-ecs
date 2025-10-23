@@ -74,3 +74,21 @@ export async function eliminarUsuarioAPI(id) {
   if (!response.ok) throw new Error("Error al eliminar usuario");
   return await response.json();
 }
+
+// Servicio para que un admin reinicie la contraseña de otro usuario
+export async function reiniciarContrasenaUsuario(id, nuevaContrasena) {
+  const response = await fetch(
+    `http://localhost:3000/usuario/${id}/contrasena`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders(),
+      },
+      body: JSON.stringify({ nuevaContrasena }),
+    },
+  );
+  if (!response.ok)
+    throw new Error("Error al reiniciar la contraseña del usuario");
+  return await response.json();
+}
