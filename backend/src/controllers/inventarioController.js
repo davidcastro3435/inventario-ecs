@@ -1,10 +1,18 @@
 // Controlador para manejar la lógica relacionada con la tabla 'item'.
 
-import { obtenerTodosLosItems, obtenerItemPorId, crearItem, eliminarItemPorId, modificarItemPorId, actualizarStockPorId, obtenerStockMensual } from '../models/inventarioModel.js';
-import { eliminarMovimientosPorProducto } from '../models/movimientoModel.js';
-import { registrarMovimientoBitacora } from './bitacoraController.js';
-import { enviarAlertaBajoStock } from '../utils/emailService.js';
-import { obtenerCorreosAdmins } from '../models/usuarioModel.js';
+import {
+  obtenerTodosLosItems,
+  obtenerItemPorId,
+  crearItem,
+  eliminarItemPorId,
+  modificarItemPorId,
+  actualizarStockPorId,
+  obtenerStockMensual,
+} from "../models/inventarioModel.js";
+import { eliminarMovimientosPorProducto } from "../models/movimientoModel.js";
+import { registrarMovimientoBitacora } from "./bitacoraController.js";
+import { enviarAlertaBajoStock } from "../utils/emailService.js";
+import { obtenerCorreosAdmins } from "../models/usuarioModel.js";
 
 // Funcion para obtener todos los items
 export async function getItems(req, res) {
@@ -12,8 +20,8 @@ export async function getItems(req, res) {
     const items = await obtenerTodosLosItems();
     res.json(items);
   } catch (error) {
-    console.error('Error al obtener los items:', error);
-    res.status(500).json({ mensaje: 'Error al obtener los items' });
+    console.error("Error al obtener los items:", error);
+    res.status(500).json({ mensaje: "Error al obtener los items" });
   }
 }
 
@@ -22,15 +30,15 @@ export async function getItemPorId(req, res) {
   try {
     const { id_producto } = req.params;
     const item = await obtenerItemPorId(id_producto);
-    
+
     if (item) {
       res.json(item);
     } else {
-      res.status(404).json({ mensaje: 'Item no encontrado' });
+      res.status(404).json({ mensaje: "Item no encontrado" });
     }
   } catch (error) {
-    console.error('Error al obtener el item:', error);
-    res.status(500).json({ mensaje: 'Error al obtener el item' });
+    console.error("Error al obtener el item:", error);
+    res.status(500).json({ mensaje: "Error al obtener el item" });
   }
 }
 
@@ -39,7 +47,12 @@ export async function postItem(req, res) {
   try {
     const usuario = req.usuario; // Obtener usuario del token decodificado
     if (!verificarAdmin(usuario)) {
-      return res.status(403).json({ mensaje: 'Acceso denegado: solo administradores pueden realizar esta acción.' });
+      return res
+        .status(403)
+        .json({
+          mensaje:
+            "Acceso denegado: solo administradores pueden realizar esta acción.",
+        });
     }
 
     const datosItem = req.body;
@@ -48,18 +61,18 @@ export async function postItem(req, res) {
     // Registrar movimiento de entrada
     if (itemCreado && id_usuario) {
       const descripcion = `Se añadieron ${itemCreado.stock_actual} unidades de ${itemCreado.nombre}.`;
-      await registrarMovimiento({
+      await registrarMovimientoBitacora({
         id_producto: itemCreado.id_producto,
         id_usuario,
         descripcion,
         cantidad: itemCreado.stock_actual,
-        tipo: 'entrada'
+        tipo: "entrada",
       });
     }
     res.status(201).json(itemCreado);
   } catch (error) {
-    console.error('Error al crear el item:', error);
-    res.status(500).json({ mensaje: 'Error al crear el item' });
+    console.error("Error al crear el item:", error);
+    res.status(500).json({ mensaje: "Error al crear el item" });
   }
 }
 
@@ -68,20 +81,28 @@ export async function deleteItem(req, res) {
   try {
     const usuario = req.usuario; // Obtener usuario del token decodificado
     if (!verificarAdmin(usuario)) {
-      return res.status(403).json({ mensaje: 'Acceso denegado: solo administradores pueden realizar esta acción.' });
+      return res
+        .status(403)
+        .json({
+          mensaje:
+            "Acceso denegado: solo administradores pueden realizar esta acción.",
+        });
     }
 
     const { id_producto } = req.params;
     await eliminarMovimientosPorProducto(id_producto);
     const itemEliminado = await eliminarItemPorId(id_producto);
     if (itemEliminado) {
-      res.json({ mensaje: 'Item eliminado correctamente', item: itemEliminado });
+      res.json({
+        mensaje: "Item eliminado correctamente",
+        item: itemEliminado,
+      });
     } else {
-      res.status(404).json({ mensaje: 'Item no encontrado' });
+      res.status(404).json({ mensaje: "Item no encontrado" });
     }
   } catch (error) {
-    console.error('Error al eliminar el item:', error);
-    res.status(500).json({ mensaje: 'Error al eliminar el item' });
+    console.error("Error al eliminar el item:", error);
+    res.status(500).json({ mensaje: "Error al eliminar el item" });
   }
 }
 
@@ -90,19 +111,39 @@ export async function patchItem(req, res) {
   try {
     const usuario = req.usuario; // Obtener usuario del token decodificado
     if (!verificarAdmin(usuario)) {
-      return res.status(403).json({ mensaje: 'Acceso denegado: solo administradores pueden realizar esta acción.' });
+      return res
+        .status(403)
+        .json({
+          mensaje:
+            "Acceso denegado: solo administradores pueden realizar esta acción.",
+        });
     }
 
     const { id_producto } = req.params;
-    const { nombre, descripcion, id_categoria, precio_unitario, stock_actual, id_usuario, alarma } = req.body;
-    if (!nombre || !descripcion || !id_categoria || precio_unitario === undefined || stock_actual === undefined || alarma === undefined) {
-      return res.status(400).json({ mensaje: 'Faltan campos requeridos' });
+    const {
+      nombre,
+      descripcion,
+      id_categoria,
+      precio_unitario,
+      stock_actual,
+      id_usuario,
+      alarma,
+    } = req.body;
+    if (
+      !nombre ||
+      !descripcion ||
+      !id_categoria ||
+      precio_unitario === undefined ||
+      stock_actual === undefined ||
+      alarma === undefined
+    ) {
+      return res.status(400).json({ mensaje: "Faltan campos requeridos" });
     }
 
     // Verifica que el item exista
     const existente = await obtenerItemPorId(id_producto);
     if (!existente) {
-      return res.status(404).json({ mensaje: 'Item no encontrado' });
+      return res.status(404).json({ mensaje: "Item no encontrado" });
     }
 
     // Guardar el stock actual de la base de datos antes de modificar
@@ -123,23 +164,31 @@ export async function patchItem(req, res) {
         id_usuario,
         nombre,
         stock_db,
-        stock_actual
+        stock_actual,
       });
     }
-    
+
     // Obtener correos de administradores
     const correosAdmins = await obtenerCorreosAdmins();
-    if (existente.stock_actual > actualizado.stock_minimo && actualizado.stock_actual <= actualizado.stock_minimo) {
+    if (
+      existente.stock_actual > actualizado.stock_minimo &&
+      actualizado.stock_actual <= actualizado.stock_minimo
+    ) {
       // Enviar alerta de bajo stock a cada admin
       for (const correo of correosAdmins) {
-        await enviarAlertaBajoStock(correo, actualizado.nombre, actualizado.stock_actual, actualizado.stock_minimo);
+        await enviarAlertaBajoStock(
+          correo,
+          actualizado.nombre,
+          actualizado.stock_actual,
+          actualizado.stock_minimo,
+        );
       }
     }
 
     res.json(actualizado);
   } catch (error) {
-    console.error('Error al modificar el item:', error);
-    res.status(500).json({ mensaje: 'Error al modificar el item' });
+    console.error("Error al modificar el item:", error);
+    res.status(500).json({ mensaje: "Error al modificar el item" });
   }
 }
 
@@ -150,21 +199,31 @@ export async function patchStockItem(req, res) {
     const { id_producto } = req.params;
     const { stock_actual } = req.body;
     if (stock_actual === undefined) {
-      return res.status(400).json({ mensaje: 'El campo stock_actual es requerido' });
+      return res
+        .status(400)
+        .json({ mensaje: "El campo stock_actual es requerido" });
     }
 
     // Verifica que el item exista
     const existente = await obtenerItemPorId(id_producto);
     if (!existente) {
-      return res.status(404).json({ mensaje: 'Item no encontrado' });
+      return res.status(404).json({ mensaje: "Item no encontrado" });
     }
 
     const actualizado = await actualizarStockPorId(id_producto, stock_actual);
     const correosAdmins = await obtenerCorreosAdmins(); // Obtener correos de administradores
     const itemActualizado = await obtenerItemPorId(id_producto);
-    if (existente.stock_actual > itemActualizado.stock_minimo && itemActualizado.stock_actual <= itemActualizado.stock_minimo) {
+    if (
+      existente.stock_actual > itemActualizado.stock_minimo &&
+      itemActualizado.stock_actual <= itemActualizado.stock_minimo
+    ) {
       for (const correo of correosAdmins) {
-        await enviarAlertaBajoStock(correo, itemActualizado.nombre, itemActualizado.stock_actual, itemActualizado.stock_minimo);
+        await enviarAlertaBajoStock(
+          correo,
+          itemActualizado.nombre,
+          itemActualizado.stock_actual,
+          itemActualizado.stock_minimo,
+        );
       }
     }
 
@@ -174,14 +233,14 @@ export async function patchStockItem(req, res) {
         id_producto,
         id_usuario: usuario.id,
         stock_db: existente.stock_actual,
-        stock_actual: itemActualizado.stock_actual
+        stock_actual: itemActualizado.stock_actual,
       });
     }
 
     res.json(actualizado);
   } catch (error) {
-    console.error('Error al actualizar el stock:', error);
-    res.status(500).json({ mensaje: 'Error al actualizar el stock' });
+    console.error("Error al actualizar el stock:", error);
+    res.status(500).json({ mensaje: "Error al actualizar el stock" });
   }
 }
 
@@ -191,11 +250,11 @@ export async function getStockMensual(req, res) {
     const stockMensual = await obtenerStockMensual();
     res.json(stockMensual);
   } catch (error) {
-    console.error('Error al obtener stock mensual:', error);
-    res.status(500).json({ mensaje: 'Error al obtener stock mensual' });
+    console.error("Error al obtener stock mensual:", error);
+    res.status(500).json({ mensaje: "Error al obtener stock mensual" });
   }
 }
 
 function verificarAdmin(usuario) {
-  return usuario && usuario.rol === 'admin';
+  return usuario && usuario.rol === "admin";
 }
