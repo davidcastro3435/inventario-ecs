@@ -84,9 +84,7 @@ async function cargarUsuarios() {
   try {
     const usuarios = await obtenerUsuariosAPI();
     renderizarTablaUsuarios(usuarios);
-  } catch (err) {
-    alert("No se pudo cargar la tabla");
-  }
+  } catch (err) {}
 }
 
 // Función para renderizar la tabla
@@ -115,96 +113,94 @@ document.addEventListener("DOMContentLoaded", () => {
   // Cargar la tabla inicialmente
   cargarUsuarios();
 
+  // Verificar rol en tiempo de ejecución y ocultar UI admin si es necesario.
+  // Hacemos una comprobación temprana para evitar que la UI admin parpadee.
+  const role = decodificarToken();
+  const adminSection =
+    document.getElementById("adminSection") ||
+    document.querySelector(".table-wrapper");
+  const btnCrear = document.getElementById("btnAbrirNuevoUsuario");
+
+  if (role !== "admin") {
+    if (adminSection) adminSection.style.display = "none";
+    if (btnCrear) btnCrear.style.display = "none";
+    // No inicializamos modales ni handlers administrativos
+    return;
+  }
+
+  // Si es admin, inicializamos modales y delegación de eventos
   initModalEliminar();
   initModalReiniciar();
-  // Inicializar modal eliminar solo para admins
-  if (decodificarToken() === "admin") {
-    // Delegación de eventos para botones de eliminar en la tabla de configuración
-    const tbody = document.querySelector(".configuracion-table tbody");
-    if (tbody) {
-      tbody.addEventListener("click", async (e) => {
-        // Prioritize reset button (btn-reset) then delete button
-        const btnReset = e.target.closest(".btn-reset");
-        if (btnReset) {
-          const id = btnReset.getAttribute("data-id");
-          let nombre = "";
-          const tr = btnReset.closest("tr");
-          if (tr) {
-            const nombreCell = tr.querySelector("td:nth-child(2)");
-            if (nombreCell) nombre = nombreCell.textContent.trim();
-          }
 
-          try {
-            mostrarModalReiniciar({
-              id,
-              nombre: nombre || `ID ${id}`,
-              onDescartar: () => {},
-              onReiniciar: async (userId, nuevaContrasena) => {
-                try {
-                  // Usar el servicio reiniciarContrasenaUsuario en lugar de fetch directo
-                  try {
-                    await reiniciarContrasenaUsuario(userId, nuevaContrasena);
-                    await cargarUsuarios();
-                    alert(
-                      `Contraseña reiniciada a "${nuevaContrasena}" para ${nombre || userId}`,
-                    );
-                  } catch (err) {
-                    alert(
-                      "Error al reiniciar contraseña: " + (err.message || err),
-                    );
-                  }
-                } catch (err) {
-                  alert(
-                    "Error al reiniciar contraseña: " + (err.message || err),
-                  );
-                }
-              },
-            });
-          } catch (err) {
-            alert(
-              "Error al mostrar el modal de reiniciar: " + (err.message || err),
-            );
-          }
-
-          return;
-        }
-
-        const btnDelete = e.target.closest(".btn-delete");
-        if (!btnDelete) return;
-
-        const id = btnDelete.getAttribute("data-id");
-        // Intentar obtener el nombre desde la fila para mostrar en el modal
+  const tbody = document.querySelector(".configuracion-table tbody");
+  if (tbody) {
+    tbody.addEventListener("click", async (e) => {
+      // Priorizar botón de reinicio (btn-reset) y luego eliminar (btn-delete)
+      const btnReset = e.target.closest(".btn-reset");
+      if (btnReset) {
+        const id = btnReset.getAttribute("data-id");
         let nombre = "";
-        const tr = btnDelete.closest("tr");
+        const tr = btnReset.closest("tr");
         if (tr) {
           const nombreCell = tr.querySelector("td:nth-child(2)");
           if (nombreCell) nombre = nombreCell.textContent.trim();
         }
 
         try {
-          mostrarModalEliminar({
+          mostrarModalReiniciar({
             id,
-            nombre: nombre,
+            nombre: nombre || `ID ${id}`,
             onDescartar: () => {},
-            onEliminar: async (userId) => {
+            onReiniciar: async (userId, nuevaContrasena) => {
               try {
-                await eliminarUsuarioAPI(userId);
+                await reiniciarContrasenaUsuario(userId, nuevaContrasena);
                 await cargarUsuarios();
-                alert("Usuario eliminado correctamente");
+                alert(
+                  `Contraseña reiniciada a "${nuevaContrasena}" para ${nombre || userId}`,
+                );
               } catch (err) {
-                alert("Error al eliminar usuario: " + (err.message || err));
+                alert("Error al reiniciar contraseña: " + (err.message || err));
               }
             },
           });
         } catch (err) {
           alert(
-            "Error al mostrar el modal de eliminar: " + (err.message || err),
+            "Error al mostrar el modal de reiniciar: " + (err.message || err),
           );
         }
-      });
-    }
-  } else {
-    // Si no es admin, solo cargar usuarios (sin inicializar modal)
-    cargarUsuarios();
+
+        return;
+      }
+
+      const btnDelete = e.target.closest(".btn-delete");
+      if (!btnDelete) return;
+
+      const id = btnDelete.getAttribute("data-id");
+      let nombre = "";
+      const tr = btnDelete.closest("tr");
+      if (tr) {
+        const nombreCell = tr.querySelector("td:nth-child(2)");
+        if (nombreCell) nombre = nombreCell.textContent.trim();
+      }
+
+      try {
+        mostrarModalEliminar({
+          id,
+          nombre: nombre,
+          onDescartar: () => {},
+          onEliminar: async (userId) => {
+            try {
+              await eliminarUsuarioAPI(userId);
+              await cargarUsuarios();
+              alert("Usuario eliminado correctamente");
+            } catch (err) {
+              alert("Error al eliminar usuario: " + (err.message || err));
+            }
+          },
+        });
+      } catch (err) {
+        alert("Error al mostrar el modal de eliminar: " + (err.message || err));
+      }
+    });
   }
 });
