@@ -88,11 +88,43 @@ function showToast(message, type = "primary", delay = 4000) {
   }
 }
 
+// -------------------------------------------------
+// Cache local y utilidades para búsqueda
+// -------------------------------------------------
+let allItems = []; // cache del inventario completo
+let searchTimeout = null; // debounce
+
+// Normaliza cadenas: minusculas, trim y remover acentos
+function normalizeString(str) {
+  if (str === null || str === undefined) return "";
+  return String(str)
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+// Función para filtrar inventario por query (nombre o id) - coincidencia parcial
+function filtrarInventario(query) {
+  const q = normalizeString(query);
+  if (!q) {
+    mostrarInventario(allItems);
+    return;
+  }
+  const filtered = allItems.filter((item) => {
+    const nombre = normalizeString(item.nombre);
+    const id = normalizeString(item.id_producto);
+    return nombre.includes(q) || id.includes(q);
+  });
+  mostrarInventario(filtered);
+}
+
 // Función para obtener los items del API usando el service
 async function obtenerInventario() {
   try {
     const items = await obtenerInventarioAPI();
-    mostrarInventario(items);
+    allItems = Array.isArray(items) ? items : [];
+    mostrarInventario(allItems);
   } catch (error) {
     mostrarError("No se pudo cargar el inventario");
   }
@@ -113,6 +145,10 @@ function mostrarInventario(items) {
   const tbody = document.querySelector(".inventory-table tbody");
   tbody.innerHTML = "";
   const rol = decodificarToken();
+  if (!Array.isArray(items) || items.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No se encontraron items</td></tr>`;
+    return;
+  }
   items.forEach((item) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
@@ -148,6 +184,18 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   iniciarModalAgregar();
   iniciarModalQuitar();
+
+  // Listener para la barra de búsqueda con debounce
+  const searchInput = document.querySelector(".search-bar");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      const value = e.target.value || "";
+      if (searchTimeout) clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        filtrarInventario(value);
+      }, 200); // 200 ms debounce
+    });
+  }
 
   const tbody = document.querySelector(".inventory-table tbody");
   if (tbody) {
