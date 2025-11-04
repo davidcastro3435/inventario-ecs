@@ -47,12 +47,10 @@ export async function postItem(req, res) {
   try {
     const usuario = req.usuario; // Obtener usuario del token decodificado
     if (!verificarAdmin(usuario)) {
-      return res
-        .status(403)
-        .json({
-          mensaje:
-            "Acceso denegado: solo administradores pueden realizar esta acción.",
-        });
+      return res.status(403).json({
+        mensaje:
+          "Acceso denegado: solo administradores pueden realizar esta acción.",
+      });
     }
 
     const datosItem = req.body;
@@ -81,12 +79,10 @@ export async function deleteItem(req, res) {
   try {
     const usuario = req.usuario; // Obtener usuario del token decodificado
     if (!verificarAdmin(usuario)) {
-      return res
-        .status(403)
-        .json({
-          mensaje:
-            "Acceso denegado: solo administradores pueden realizar esta acción.",
-        });
+      return res.status(403).json({
+        mensaje:
+          "Acceso denegado: solo administradores pueden realizar esta acción.",
+      });
     }
 
     const { id_producto } = req.params;
@@ -111,12 +107,10 @@ export async function patchItem(req, res) {
   try {
     const usuario = req.usuario; // Obtener usuario del token decodificado
     if (!verificarAdmin(usuario)) {
-      return res
-        .status(403)
-        .json({
-          mensaje:
-            "Acceso denegado: solo administradores pueden realizar esta acción.",
-        });
+      return res.status(403).json({
+        mensaje:
+          "Acceso denegado: solo administradores pueden realizar esta acción.",
+      });
     }
 
     const { id_producto } = req.params;
@@ -197,7 +191,16 @@ export async function patchStockItem(req, res) {
   try {
     const usuario = req.usuario; // Obtener usuario del token decodificado
     const { id_producto } = req.params;
-    const { stock_actual } = req.body;
+    const {
+      nombre,
+      descripcion,
+      id_categoria,
+      precio_unitario,
+      stock_actual,
+      id_usuario,
+      alarma,
+    } = req.body;
+
     if (stock_actual === undefined) {
       return res
         .status(400)
@@ -232,6 +235,7 @@ export async function patchStockItem(req, res) {
       await registrarMovimientoBitacora({
         id_producto,
         id_usuario: usuario.id,
+        nombre: itemActualizado.nombre,
         stock_db: existente.stock_actual,
         stock_actual: itemActualizado.stock_actual,
       });
