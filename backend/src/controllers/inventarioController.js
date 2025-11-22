@@ -164,18 +164,28 @@ export async function patchItem(req, res) {
 
     // Obtener correos de administradores
     const correosAdmins = await obtenerCorreosAdmins();
+    // Cambié las comprobaciones para usar 'alarma' (campo existente en el modelo)
     if (
-      existente.stock_actual > actualizado.stock_minimo &&
-      actualizado.stock_actual <= actualizado.stock_minimo
+      existente.stock_actual > actualizado.alarma &&
+      actualizado.stock_actual <= actualizado.alarma
     ) {
       // Enviar alerta de bajo stock a cada admin
       for (const correo of correosAdmins) {
-        await enviarAlertaBajoStock(
-          correo,
-          actualizado.nombre,
-          actualizado.stock_actual,
-          actualizado.stock_minimo,
-        );
+        try {
+          const ok = await enviarAlertaBajoStock(
+            correo,
+            actualizado.nombre,
+            actualizado.stock_actual,
+            actualizado.alarma,
+          );
+          if (!ok) {
+            console.error(
+              `No se pudo enviar correo a ${correo} para item ${actualizado.nombre}`,
+            );
+          }
+        } catch (err) {
+          console.error(`Error enviando correo a ${correo}:`, err);
+        }
       }
     }
 
@@ -216,17 +226,27 @@ export async function patchStockItem(req, res) {
     const actualizado = await actualizarStockPorId(id_producto, stock_actual);
     const correosAdmins = await obtenerCorreosAdmins(); // Obtener correos de administradores
     const itemActualizado = await obtenerItemPorId(id_producto);
+    // Usar 'alarma' en la comprobación
     if (
-      existente.stock_actual > itemActualizado.stock_minimo &&
-      itemActualizado.stock_actual <= itemActualizado.stock_minimo
+      existente.stock_actual > itemActualizado.alarma &&
+      itemActualizado.stock_actual <= itemActualizado.alarma
     ) {
       for (const correo of correosAdmins) {
-        await enviarAlertaBajoStock(
-          correo,
-          itemActualizado.nombre,
-          itemActualizado.stock_actual,
-          itemActualizado.stock_minimo,
-        );
+        try {
+          const ok = await enviarAlertaBajoStock(
+            correo,
+            itemActualizado.nombre,
+            itemActualizado.stock_actual,
+            itemActualizado.alarma,
+          );
+          if (!ok) {
+            console.error(
+              `No se pudo enviar correo a ${correo} para item ${itemActualizado.nombre}`,
+            );
+          }
+        } catch (err) {
+          console.error(`Error enviando correo a ${correo}:`, err);
+        }
       }
     }
 
