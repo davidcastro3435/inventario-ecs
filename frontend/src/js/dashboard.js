@@ -9,18 +9,50 @@ import { requireAuth } from "./authGuard.js";
 // Requerir autenticación al cargar el módulo; redirige si el token está ausente o expirado
 requireAuth();
 
+// -----------------------------
+// Util: decodificar token JWT
+// -----------------------------
+function decodificarToken() {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    const payloadBase64 = parts[1];
+    // atob puede lanzar si la cadena no es válida
+    const payloadJson = atob(
+      payloadBase64.replace(/-/g, "+").replace(/_/g, "/"),
+    );
+    const payload = JSON.parse(decodeURIComponent(escape(payloadJson)));
+    return payload.rol ?? null;
+  } catch (e) {
+    // Token inválido o malformado
+    console.warn("No se pudo decodificar el token:", e);
+    return null;
+  }
+}
+
+// Obtener rol del usuario (puede ser null si no está disponible)
+const userRole = decodificarToken();
+
+// -----------------------------
+// Carga inicial de datos
+// -----------------------------
 const inventario = await obtenerInventarioAPI();
 const categorias = await obtenerCategoriasAPI();
 
 /*
 ==============================================
-    Cuadro de valor total inventario
+    Cuadro de valor total inventario (visible solo para admin)
 ==============================================
 */
 
 async function mostrarValorTotalInventario() {
   try {
-    // Llamada al API para obtener todo el inventario
+    // Solo calcular y mostrar si el usuario es admin
+    if (userRole !== "admin") return;
+
+    // Llamada al API para obtener todo el inventario (ya lo tenemos en `inventario`)
     let total = 0;
     for (const item of inventario) {
       total += (item.stock_actual || 0) * (item.precio_unitario || 0);
@@ -38,12 +70,26 @@ async function mostrarValorTotalInventario() {
   }
 }
 
+// Mostrar u ocultar el contenedor del valor total según el rol
+function aplicarVisibilidadValorTotal() {
+  const contenedor = document.getElementById("valor-total-inventario-box");
+  if (!contenedor) return;
+
+  if (userRole === "admin") {
+    contenedor.style.display = "flex"; // o el valor original que se desee
+    mostrarValorTotalInventario();
+  } else {
+    contenedor.style.display = "none";
+  }
+}
+
 // Ejecutar al cargar el dashboard
-mostrarValorTotalInventario();
+aplicarVisibilidadValorTotal();
 
 /*
 ==============================================
     Grafico de Barras: Valor total inventario por categoría
+    (el resto de gráficos y funciones permanecen iguales)
 ==============================================
 */
 
